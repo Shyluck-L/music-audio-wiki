@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAC（Advanced Audio Coding） - 數位音樂與音質知識庫</title>
+  <style>
+
+:root {
+  --bg-cream: #FAF8F5;
+  --card-bg: #FFFFFF;
+  --card-alt: #F6F3EE;
+  --ink-black: #231F20;
+  --ink-muted: #5C5550;
+  --border-ink: #231F20;
+  --border-subtle: #E2DDD5;
+  --accent-warm: #EAD9C8;
+  --accent-badge: #FBF0D9;
+  --accent-callout: #FFF9ED;
+  --accent-green: #E3EDE4;
+  --accent-pink: #F5DCD5;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --code-font: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--ink-black);
+  font-family: var(--font-family);
+  line-height: 1.75;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.wiki-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* 頂部導航列 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 14px;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2rem;
+}
+
+.breadcrumbs {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-muted);
+}
+
+.breadcrumbs a {
+  color: var(--ink-black);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--ink-muted);
+}
+
+.breadcrumbs a:hover {
+  color: #8C4324;
+  border-bottom-style: solid;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--ink-black);
+  background: var(--card-alt);
+  border: 1.5px solid var(--border-ink);
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px rgba(35, 31, 32, 0.8);
+  transition: all 0.12s ease;
+}
+
+.nav-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  background: var(--accent-warm);
+}
+
+.nav-btn.primary {
+  background: var(--ink-black);
+  color: #FAF8F5;
+}
+
+.nav-btn.primary:hover {
+  background: #3B3436;
+}
+
+/* 主文章卡片 */
+.article-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 18px;
+  padding: 2.5rem 2.2rem;
+  box-shadow: 4px 5px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2.5rem;
+}
+
+/* 標題與內文排版 */
+h1.article-title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.5px;
+  color: var(--ink-black);
+  border-bottom: 3px solid var(--border-ink);
+  padding-bottom: 0.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-top: 2.2rem;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1.5px solid var(--border-subtle);
+  padding-bottom: 0.4rem;
+}
+
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background: var(--ink-black);
+  border-radius: 50%;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-top: 1.6rem;
+  margin-bottom: 0.6rem;
+  color: #2D2728;
+}
+
+p {
+  margin-bottom: 1.1rem;
+  font-size: 1.02rem;
+}
+
+/* 金句與引言 */
+.quote-highlight {
+  background: var(--card-alt);
+  border-left: 5px solid var(--border-ink);
+  border-radius: 0 12px 12px 0;
+  padding: 1.1rem 1.4rem;
+  margin: 1.4rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+/* 補充說明 / Note Alert 區塊 */
+.callout-note {
+  background: var(--accent-callout);
+  border: 1.8px solid var(--border-ink);
+  border-radius: 12px;
+  padding: 1.1rem 1.3rem;
+  margin: 1.4rem 0;
+  box-shadow: 2px 3px 0px rgba(35, 31, 32, 0.8);
+}
+
+.callout-note-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: var(--accent-badge);
+  border: 1.2px solid var(--border-ink);
+  padding: 0.15rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+}
+
+/* 清單樣式 */
+ul, ol {
+  margin: 0.8rem 0 1.2rem 1.8rem;
+  font-size: 1rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+li strong {
+  color: var(--ink-black);
+}
+
+/* 表格樣式 */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0 2rem;
+  border: 2px solid var(--border-ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.85);
+  background: #FFFFFF;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+th, td {
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+}
+
+th:last-child, td:last-child {
+  border-right: none;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+th {
+  background: var(--card-alt);
+  font-weight: 800;
+  color: var(--ink-black);
+  border-bottom: 2px solid var(--border-ink);
+}
+
+tr:nth-child(even) td {
+  background: #FCFBF9;
+}
+
+/* 行內代碼與標記 */
+code {
+  font-family: var(--code-font);
+  font-size: 0.88em;
+  background: var(--card-alt);
+  border: 1px solid var(--border-subtle);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  color: #7A331A;
+}
+
+/* 連結樣式 */
+a {
+  color: #1A5FA8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+a:hover {
+  color: #A33A18;
+}
+
+hr.wiki-divider {
+  border: none;
+  border-top: 1.5px dashed var(--border-subtle);
+  margin: 2.2rem 0;
+}
+
+/* 頁尾導航 */
+.footer-nav {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+.footer-nav a {
+  margin: 0 0.5rem;
+  color: var(--ink-black);
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 1rem 0.75rem 3rem;
+  }
+  .article-card {
+    padding: 1.5rem 1.1rem;
+  }
+  h1.article-title {
+    font-size: 1.65rem;
+  }
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="wiki-container">
+    <!-- 頂部導航列 -->
+    <nav class="top-nav">
+      <div class="breadcrumbs">
+        <a href="../../index.html">🏠 首頁</a>
+        <span>/</span>
+        <a href="../../index.html#wiki-catalog">📚 Wiki 導覽</a>
+        <span>/</span>
+        <span>音訊格式（Formats）</span>
+      </div>
+      <div class="nav-actions">
+        <a href="../../presentation/index.html" class="nav-btn primary">▶ 開啟教學簡報</a>
+        <a href="../../index.html" class="nav-btn">← 回首頁</a>
+        <a href="./aac.md" target="_blank" class="nav-btn" title="查看原始 Markdown 文本">📄 Markdown 原文</a>
+      </div>
+    </nav>
+
+    <!-- 文章本體 -->
+    <article class="article-card">
+      <h1 class="article-title">AAC（Advanced Audio Coding）</h1>
+      <div class="article-body">
+<div class="quote-highlight"><strong>一句話白話結論</strong>：MP3 的全方位升級版接班人，在更低位元率下能提供更出色的音質，是 Apple 串流、YouTube 與大眾藍牙耳機的核心有損格式。</div>
+<h2 id="概念說明"><span id="概念說明"></span>概念說明</h2>
+<p>進階音訊編碼（AAC，Advanced Audio Coding）是由 MPEG 組織（包含杜比、Fraunhofer 等機構）共同制定的有損音訊壓縮技術，屬於 MPEG-4（Part 3）與 MPEG-2（Part 7）標準的一部分。其誕生目標就是為了解決 MP3 壓縮效率較低與高頻衰減的問題，在相同甚至更小的檔案大小下提供更優秀的聲音細節。</p>
+<p>AAC 具備多種針對不同場景特化的設定檔（Profiles），廣泛應用於現代串流影音（如 YouTube）、智慧型手機以及 Apple 生態系統（Apple Music 預設有損串流格式）。</p>
+<h2 id="重點整理"><span id="重點整理"></span>重點整理</h2>
+<ul>
+  <li><strong>顯著躍升的壓縮效率</strong>：</li>
+  <ul>
+    <li>相較於 MP3，AAC 採用了更先進的轉換演算法與心理聲學模型。</li>
+    <li><strong>立體聲建議起點</strong>：AAC 僅需約 <strong>96 kbps</strong> 即可呈現良好的立體聲聽感（MP3 通常需要 128 kbps 以上）。</li>
+    <li>業界普遍評估，<strong>256 kbps 的 AAC</strong> 在聽感還原度上已能媲美甚至超越 320 kbps 的 MP3。</li>
+  </ul>
+  <li><strong>豐富的規格支援度</strong>：</li>
+  <ul>
+    <li>支援取樣率由 8 kHz 至 96 kHz。</li>
+    <li>位元率可自由設定，最高支援至 512 kbps，並完整支援固定位元率（CBR）與可變位元率（VBR）。</li>
+  </ul>
+  <li><strong>Apple 生態系與藍牙無線傳輸的核心</strong>：</li>
+  <ul>
+    <li>Apple 旗下裝置（iPhone、iPad、Mac）與無線耳機（AirPods 全系列、Beats 系列）在進行藍牙傳輸時，均預設採用 <strong>Apple AAC 藍牙編碼</strong>，確保在有限頻寬下提供穩定的高音質無線聆聽體驗。</li>
+  </ul>
+  <li><strong>專利授權考量</strong>：</li>
+  <ul>
+    <li>與 MP3 專利全面過期不同，AAC 仍屬於受專利保護的格式，因此在開源瀏覽器或特殊系統中，通常依賴作業系統底層隨附的解碼模組來提供播放支援。</li>
+  </ul>
+</ul>
+<h2 id="生活類比"><span id="生活類比"></span>生活類比</h2>
+<div class="callout-note">
+  <div class="callout-note-badge">💡 [補充說明] 生活類比</div>
+  <p>如果 MP3 像是經典的大排氣量自然進氣引擎，AAC 就好比現代的「渦輪增壓油電引擎」：消耗更少的油料（佔用更低位元率），卻能迸發出相同的馬力與平順行路質感（呈現更豐富的高頻與動態細節）。</p>
+</div>
+<h2 id="實務應用與選擇建議"><span id="實務應用與選擇建議"></span>實務應用與選擇建議</h2>
+<ul>
+  <li><strong>現代網路串流與行動下載</strong>：日常聽音樂若考量手機容量與行動網路流量，<strong>256 kbps AAC</strong> 是兼顧高保真度與順暢載入的甜蜜點首選。</li>
+  <li><strong>無線耳機聆聽</strong>：在 Apple 裝置上搭配 AirPods 進行常規藍牙播放時，不論音源是無損還是有損，藍牙傳輸端最終都會轉為 AAC 傳輸（Apple Vision Pro 之專有無線協定等少數情境除外）。</li>
+</ul>
+<h2 id="關聯條目"><span id="關聯條目"></span>關聯條目</h2>
+<ul>
+  <li><a href="./mp3.html">MP3 格式專頁</a> - 比較 AAC 與其前身 MP3 的演進與差異</li>
+  <li><a href="./alac.html">ALAC 格式專頁</a> - Apple 生態系中的無損音訊格式對應方案</li>
+  <li><a href="../comparisons/apple-music-lossless.html">Apple Music 無損音訊與播放設備指南</a> - 了解 Apple 藍牙設備為何受限於 AAC 傳輸</li>
+  <li><a href="../comparisons/lossy-vs-lossless.html">橫向對比：有損壓縮 vs 無損壓縮</a> - 評估高碼率有損與無損音訊之實質差別</li>
+</ul>
+<h2 id="原始來源"><span id="原始來源"></span>原始來源</h2>
+<ul>
+  <li><strong>文章標題</strong>：<a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Audio_codecs" target="_blank" rel="noopener">Web audio codec guide</a></li>
+  <ul>
+    <li><strong>原始檔案</strong>：<code>raw/03-mdn-audio-codecs.md</code></li>
+    <li><strong>對應章節/段落</strong>：章節「AAC (Advanced Audio Coding)」</li>
+  </ul>
+  <li><strong>文章標題</strong>：<a href="https://support.apple.com/en-us/118295" target="_blank" rel="noopener">About lossless audio in Apple Music</a></li>
+  <ul>
+    <li><strong>原始檔案</strong>：<code>raw/05-apple-lossless-audio.md</code></li>
+    <li><strong>對應章節/段落</strong>：章節「About lossless audio with Apple and Beats headphones」</li>
+  </ul>
+</ul>
+      </div>
+    </article>
+
+    <!-- 底部導航 -->
+    <footer class="footer-nav">
+      <p>數位音樂與音質結構化知識庫 ｜ 依據 Andrej Karpathy LLM Wiki 構想建立</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="../../index.html">專案首頁</a> •
+        <a href="../../presentation/index.html">12 頁手繪簡報</a> •
+        <a href="../../index.md">Wiki 目錄 (index.md)</a> •
+        <a href="./aac.md">本篇 Markdown 原文</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

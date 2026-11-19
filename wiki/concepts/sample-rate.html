@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>取樣率（Sampling Rate） - 數位音樂與音質知識庫</title>
+  <style>
+
+:root {
+  --bg-cream: #FAF8F5;
+  --card-bg: #FFFFFF;
+  --card-alt: #F6F3EE;
+  --ink-black: #231F20;
+  --ink-muted: #5C5550;
+  --border-ink: #231F20;
+  --border-subtle: #E2DDD5;
+  --accent-warm: #EAD9C8;
+  --accent-badge: #FBF0D9;
+  --accent-callout: #FFF9ED;
+  --accent-green: #E3EDE4;
+  --accent-pink: #F5DCD5;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --code-font: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--ink-black);
+  font-family: var(--font-family);
+  line-height: 1.75;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.wiki-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* 頂部導航列 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 14px;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2rem;
+}
+
+.breadcrumbs {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-muted);
+}
+
+.breadcrumbs a {
+  color: var(--ink-black);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--ink-muted);
+}
+
+.breadcrumbs a:hover {
+  color: #8C4324;
+  border-bottom-style: solid;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--ink-black);
+  background: var(--card-alt);
+  border: 1.5px solid var(--border-ink);
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px rgba(35, 31, 32, 0.8);
+  transition: all 0.12s ease;
+}
+
+.nav-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  background: var(--accent-warm);
+}
+
+.nav-btn.primary {
+  background: var(--ink-black);
+  color: #FAF8F5;
+}
+
+.nav-btn.primary:hover {
+  background: #3B3436;
+}
+
+/* 主文章卡片 */
+.article-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 18px;
+  padding: 2.5rem 2.2rem;
+  box-shadow: 4px 5px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2.5rem;
+}
+
+/* 標題與內文排版 */
+h1.article-title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.5px;
+  color: var(--ink-black);
+  border-bottom: 3px solid var(--border-ink);
+  padding-bottom: 0.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-top: 2.2rem;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1.5px solid var(--border-subtle);
+  padding-bottom: 0.4rem;
+}
+
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background: var(--ink-black);
+  border-radius: 50%;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-top: 1.6rem;
+  margin-bottom: 0.6rem;
+  color: #2D2728;
+}
+
+p {
+  margin-bottom: 1.1rem;
+  font-size: 1.02rem;
+}
+
+/* 金句與引言 */
+.quote-highlight {
+  background: var(--card-alt);
+  border-left: 5px solid var(--border-ink);
+  border-radius: 0 12px 12px 0;
+  padding: 1.1rem 1.4rem;
+  margin: 1.4rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+/* 補充說明 / Note Alert 區塊 */
+.callout-note {
+  background: var(--accent-callout);
+  border: 1.8px solid var(--border-ink);
+  border-radius: 12px;
+  padding: 1.1rem 1.3rem;
+  margin: 1.4rem 0;
+  box-shadow: 2px 3px 0px rgba(35, 31, 32, 0.8);
+}
+
+.callout-note-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: var(--accent-badge);
+  border: 1.2px solid var(--border-ink);
+  padding: 0.15rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+}
+
+/* 清單樣式 */
+ul, ol {
+  margin: 0.8rem 0 1.2rem 1.8rem;
+  font-size: 1rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+li strong {
+  color: var(--ink-black);
+}
+
+/* 表格樣式 */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0 2rem;
+  border: 2px solid var(--border-ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.85);
+  background: #FFFFFF;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+th, td {
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+}
+
+th:last-child, td:last-child {
+  border-right: none;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+th {
+  background: var(--card-alt);
+  font-weight: 800;
+  color: var(--ink-black);
+  border-bottom: 2px solid var(--border-ink);
+}
+
+tr:nth-child(even) td {
+  background: #FCFBF9;
+}
+
+/* 行內代碼與標記 */
+code {
+  font-family: var(--code-font);
+  font-size: 0.88em;
+  background: var(--card-alt);
+  border: 1px solid var(--border-subtle);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  color: #7A331A;
+}
+
+/* 連結樣式 */
+a {
+  color: #1A5FA8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+a:hover {
+  color: #A33A18;
+}
+
+hr.wiki-divider {
+  border: none;
+  border-top: 1.5px dashed var(--border-subtle);
+  margin: 2.2rem 0;
+}
+
+/* 頁尾導航 */
+.footer-nav {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+.footer-nav a {
+  margin: 0 0.5rem;
+  color: var(--ink-black);
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 1rem 0.75rem 3rem;
+  }
+  .article-card {
+    padding: 1.5rem 1.1rem;
+  }
+  h1.article-title {
+    font-size: 1.65rem;
+  }
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="wiki-container">
+    <!-- 頂部導航列 -->
+    <nav class="top-nav">
+      <div class="breadcrumbs">
+        <a href="../../index.html">🏠 首頁</a>
+        <span>/</span>
+        <a href="../../index.html#wiki-catalog">📚 Wiki 導覽</a>
+        <span>/</span>
+        <span>核心概念（Concepts）</span>
+      </div>
+      <div class="nav-actions">
+        <a href="../../presentation/index.html" class="nav-btn primary">▶ 開啟教學簡報</a>
+        <a href="../../index.html" class="nav-btn">← 回首頁</a>
+        <a href="./sample-rate.md" target="_blank" class="nav-btn" title="查看原始 Markdown 文本">📄 Markdown 原文</a>
+      </div>
+    </nav>
+
+    <!-- 文章本體 -->
+    <article class="article-card">
+      <h1 class="article-title">取樣率（Sampling Rate）</h1>
+      <div class="article-body">
+<div class="quote-highlight"><strong>一句話白話結論</strong>：取樣率代表電腦每秒對聲音「拍照」測量的次數，它唯一決定的就是音訊能記錄的「最高聲音頻率」。</div>
+<h2 id="概念說明"><span id="概念說明"></span>概念說明</h2>
+<p>自然界的聲音是連續變化的類比聲波。當麥克風將聲音轉為電壓訊號後，類比數位轉換器（ADC）會以固定的時間間隔量測電壓數值，這個每秒記錄的次數就稱為「取樣率（Sampling Rate）」，單位為赫茲（Hz）或千赫茲（kHz）。</p>
+<p>取樣率並不是越高就代表波形越平滑，根據奈奎斯特–夏農取樣定理（Nyquist-Shannon Sampling Theorem），取樣率決定了數位訊號能忠實還原的最高頻率上限（稱為奈奎斯特頻率，Nyquist Frequency），其數值剛好等於取樣率的一半。</p>
+<h2 id="重點整理"><span id="重點整理"></span>重點整理</h2>
+<ul>
+  <li><strong>最高聲音頻率由取樣率決定（奈奎斯特定理）</strong>：若要記錄最高頻率為 <code>f</code> 的聲音，每秒測量的次數必須達到 <code>2f</code> 以上（也就是最高頻率等於取樣率的一半）。人耳極限聽覺頻率約為 20 kHz（20,000 Hz），因此取樣率至少需 40 kHz 才能涵蓋人耳可聽範圍。</li>
+  <li><strong>混疊失真（Aliasing）</strong>：如果輸入的聲音頻率超出上限，多出來的超高頻訊號無法正常記錄，反而會「折射」回可聽範圍內變成刺耳的數位雜音。</li>
+  <li><strong>抗混疊濾波器（Anti-Aliasing Filter）</strong>：在將聲音轉換為數位訊號前，硬體必須先用低通濾波器把過高的頻率切掉。但現實中的濾波器無法像懸崖一樣垂直一刀切斷（即所謂的「磚牆濾波」），而是需要一小段「緩衝過渡頻帶（Transition Band）」逐漸減弱。</li>
+  <li><strong>常見取樣率規格的日常應用</strong>：</li>
+  <ul>
+    <li><strong>8 kHz (8,000 Hz)</strong>：傳統電話通話標準（G.711），僅保留 3.4 kHz 以下語音頻率，足夠聽懂說話內容但音質單薄。</li>
+    <li><strong>44.1 kHz</strong>：CD 音質標準。頻率上限為 22.05 kHz，在人耳極限 20 kHz 外留有約 2.05 kHz 的濾波緩衝空間。</li>
+    <li><strong>48 kHz</strong>：影視影音、電腦系統與多數藍牙設備預設標準，預留了 4 kHz 濾波緩衝，是現代數位影音最通用的規格。</li>
+    <li><strong>96 kHz / 192 kHz</strong>：高解析音訊（Hi-Res Audio），主要用於專業錄音室母帶後製、極端降速音效處理或特殊科學記錄。</li>
+  </ul>
+</ul>
+<h2 id="生活類比"><span id="生活類比"></span>生活類比</h2>
+<div class="callout-note">
+  <div class="callout-note-badge">💡 [補充說明] 生活類比</div>
+  <p>許多人常把取樣率比喻為影片的「每秒影格數（FPS）」，以為影格越多動作越平滑。但在音訊物理上這個比喻並不精確：數位音訊在播放轉換為類比訊號時，會透過重建濾波器平滑還原出平滑波形，而非階梯狀。更貼切的直覺是「光譜捕蟲網」：取樣率多高，網子就能攔截多高頻率的聲波，網子以外的高頻若不先過濾掉，反而會掉進網內變成干擾雜音。</p>
+</div>
+<h2 id="實務應用與選擇建議"><span id="實務應用與選擇建議"></span>實務應用與選擇建議</h2>
+<ul>
+  <li><strong>一般音樂聆聽與串流</strong>：44.1 kHz 或 48 kHz 已完整涵蓋人耳極限（20 Hz～20 kHz），能滿足絕大多數日常播放環境的需求。</li>
+  <li><strong>音樂製作與錄音</strong>：推薦使用 48 kHz 或 96 kHz 進行專案錄音與混音，這能為非線性處理（如飽和度、壓縮效果）提供充足的安全餘裕。</li>
+  <li><strong>超高取樣率（176.4 kHz / 192 kHz）</strong>：除非涉及大幅度的降調音效設計（Pitch shifting）或特殊科學錄音，否則會佔用雙倍以上的儲存空間與運算資源，且過短的測量時間反而可能引入電壓測量誤差。</li>
+</ul>
+<h2 id="常見迷思與 FAQ"><span id="常見迷思與-FAQ"></span>常見迷思與 FAQ</h2>
+<ul>
+  <li><strong>Q：取樣率越高，波形看起來比較不鋸齒，聲音就一定越細緻嗎？</strong></li>
+  <ul>
+    <li>A：這是常見誤解。數位音訊中不存在「階梯形鋸齒」，播放端的數位類比轉換器（DAC）會利用濾波器將取樣點精確重建為平滑的連續波形。取樣率提高的本質是拓展能記錄的最高頻率，而非讓既有頻率更平滑。</li>
+  </ul>
+</ul>
+<h2 id="關聯條目"><span id="關聯條目"></span>關聯條目</h2>
+<ul>
+  <li><a href="./bit-depth.html">位元深度（Bit Depth）</a> - 取樣率決定時間軸頻率，位元深度則決定振幅軸動態</li>
+  <li><a href="./bitrate.html">位元率（Bitrate）與檔案大小</a> - 取樣率是計算未壓縮音訊碼率的核心因子</li>
+  <li><a href="../myths/higher-sample-rate-and-bit-depth.html">常見迷思：取樣率與位元深度越高越好嗎？</a> - 詳細探討 96k/192k 與人耳聽覺極限</li>
+</ul>
+<h2 id="原始來源"><span id="原始來源"></span>原始來源</h2>
+<ul>
+  <li><strong>文章標題</strong>：<a href="https://www.izotope.com/community/blog/digital-audio-basics-sample-rate-and-bit-depth" target="_blank" rel="noopener">Digital audio basics: audio sample rate and bit depth</a></li>
+  <ul>
+    <li><strong>原始檔案</strong>：<code>raw/01-izotope-digital-audio-basics.md</code></li>
+    <li><strong>對應章節/段落</strong>：章節「What is an audio sample rate?」、「Selecting an audio sample rate」、「Sample rates and aliasing」、「44.1 kHz vs. 48 kHz」、「88.2 kHz vs. 96 kHz」</li>
+  </ul>
+  <li><strong>文章標題</strong>：<a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Audio_concepts" target="_blank" rel="noopener">Digital audio concepts</a></li>
+  <ul>
+    <li><strong>原始檔案</strong>：<code>raw/02-mdn-digital-audio-concepts.md</code></li>
+    <li><strong>對應章節/段落</strong>：章節「Sampling audio」、「Sample rates」</li>
+  </ul>
+</ul>
+      </div>
+    </article>
+
+    <!-- 底部導航 -->
+    <footer class="footer-nav">
+      <p>數位音樂與音質結構化知識庫 ｜ 依據 Andrej Karpathy LLM Wiki 構想建立</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="../../index.html">專案首頁</a> •
+        <a href="../../presentation/index.html">12 頁手繪簡報</a> •
+        <a href="../../index.md">Wiki 目錄 (index.md)</a> •
+        <a href="./sample-rate.md">本篇 Markdown 原文</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

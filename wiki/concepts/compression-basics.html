@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>音訊壓縮原理與心理聲學（Audio Compression &amp; Psychoacoustics） - 數位音樂與音質知識庫</title>
+  <style>
+
+:root {
+  --bg-cream: #FAF8F5;
+  --card-bg: #FFFFFF;
+  --card-alt: #F6F3EE;
+  --ink-black: #231F20;
+  --ink-muted: #5C5550;
+  --border-ink: #231F20;
+  --border-subtle: #E2DDD5;
+  --accent-warm: #EAD9C8;
+  --accent-badge: #FBF0D9;
+  --accent-callout: #FFF9ED;
+  --accent-green: #E3EDE4;
+  --accent-pink: #F5DCD5;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --code-font: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--ink-black);
+  font-family: var(--font-family);
+  line-height: 1.75;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.wiki-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* 頂部導航列 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 14px;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2rem;
+}
+
+.breadcrumbs {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-muted);
+}
+
+.breadcrumbs a {
+  color: var(--ink-black);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--ink-muted);
+}
+
+.breadcrumbs a:hover {
+  color: #8C4324;
+  border-bottom-style: solid;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--ink-black);
+  background: var(--card-alt);
+  border: 1.5px solid var(--border-ink);
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px rgba(35, 31, 32, 0.8);
+  transition: all 0.12s ease;
+}
+
+.nav-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  background: var(--accent-warm);
+}
+
+.nav-btn.primary {
+  background: var(--ink-black);
+  color: #FAF8F5;
+}
+
+.nav-btn.primary:hover {
+  background: #3B3436;
+}
+
+/* 主文章卡片 */
+.article-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 18px;
+  padding: 2.5rem 2.2rem;
+  box-shadow: 4px 5px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2.5rem;
+}
+
+/* 標題與內文排版 */
+h1.article-title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.5px;
+  color: var(--ink-black);
+  border-bottom: 3px solid var(--border-ink);
+  padding-bottom: 0.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-top: 2.2rem;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1.5px solid var(--border-subtle);
+  padding-bottom: 0.4rem;
+}
+
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background: var(--ink-black);
+  border-radius: 50%;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-top: 1.6rem;
+  margin-bottom: 0.6rem;
+  color: #2D2728;
+}
+
+p {
+  margin-bottom: 1.1rem;
+  font-size: 1.02rem;
+}
+
+/* 金句與引言 */
+.quote-highlight {
+  background: var(--card-alt);
+  border-left: 5px solid var(--border-ink);
+  border-radius: 0 12px 12px 0;
+  padding: 1.1rem 1.4rem;
+  margin: 1.4rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+/* 補充說明 / Note Alert 區塊 */
+.callout-note {
+  background: var(--accent-callout);
+  border: 1.8px solid var(--border-ink);
+  border-radius: 12px;
+  padding: 1.1rem 1.3rem;
+  margin: 1.4rem 0;
+  box-shadow: 2px 3px 0px rgba(35, 31, 32, 0.8);
+}
+
+.callout-note-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: var(--accent-badge);
+  border: 1.2px solid var(--border-ink);
+  padding: 0.15rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+}
+
+/* 清單樣式 */
+ul, ol {
+  margin: 0.8rem 0 1.2rem 1.8rem;
+  font-size: 1rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+li strong {
+  color: var(--ink-black);
+}
+
+/* 表格樣式 */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0 2rem;
+  border: 2px solid var(--border-ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.85);
+  background: #FFFFFF;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+th, td {
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+}
+
+th:last-child, td:last-child {
+  border-right: none;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+th {
+  background: var(--card-alt);
+  font-weight: 800;
+  color: var(--ink-black);
+  border-bottom: 2px solid var(--border-ink);
+}
+
+tr:nth-child(even) td {
+  background: #FCFBF9;
+}
+
+/* 行內代碼與標記 */
+code {
+  font-family: var(--code-font);
+  font-size: 0.88em;
+  background: var(--card-alt);
+  border: 1px solid var(--border-subtle);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  color: #7A331A;
+}
+
+/* 連結樣式 */
+a {
+  color: #1A5FA8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+a:hover {
+  color: #A33A18;
+}
+
+hr.wiki-divider {
+  border: none;
+  border-top: 1.5px dashed var(--border-subtle);
+  margin: 2.2rem 0;
+}
+
+/* 頁尾導航 */
+.footer-nav {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+.footer-nav a {
+  margin: 0 0.5rem;
+  color: var(--ink-black);
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 1rem 0.75rem 3rem;
+  }
+  .article-card {
+    padding: 1.5rem 1.1rem;
+  }
+  h1.article-title {
+    font-size: 1.65rem;
+  }
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="wiki-container">
+    <!-- 頂部導航列 -->
+    <nav class="top-nav">
+      <div class="breadcrumbs">
+        <a href="../../index.html">🏠 首頁</a>
+        <span>/</span>
+        <a href="../../index.html#wiki-catalog">📚 Wiki 導覽</a>
+        <span>/</span>
+        <span>核心概念（Concepts）</span>
+      </div>
+      <div class="nav-actions">
+        <a href="../../presentation/index.html" class="nav-btn primary">▶ 開啟教學簡報</a>
+        <a href="../../index.html" class="nav-btn">← 回首頁</a>
+        <a href="./compression-basics.md" target="_blank" class="nav-btn" title="查看原始 Markdown 文本">📄 Markdown 原文</a>
+      </div>
+    </nav>
+
+    <!-- 文章本體 -->
+    <article class="article-card">
+      <h1 class="article-title">音訊壓縮原理與心理聲學（Audio Compression & Psychoacoustics）</h1>
+      <div class="article-body">
+<div class="quote-highlight"><strong>一句話白話結論</strong>：音訊資料因充滿隨機性而難以用一般壓縮軟體瘦身，必須結合人類聽覺生理限制（心理聲學），精準丟棄人耳察覺不到的聲音細節。</div>
+<h2 id="概念說明"><span id="概念說明"></span>概念說明</h2>
+<p>一般純文字或程式碼檔案通常包含大量重複的字元片段，通用壓縮工具（如 ZIP）很容易找出規律予以縮減。但未壓縮的數位音訊充滿了自然的隨機微幅波動（稱為「雜訊特性，Noisy」），幾乎沒有完全相同的位元組重複出現，因此傳統無損壓縮演算法對音訊的壓縮效率相當有限。</p>
+<p>為了解決音訊龐大的檔案體積問題，科學家發展出專門針對聲音特性的壓縮技術，主要分為：</p>
+<ol>
+  <li><strong>無損壓縮（Lossless Compression）</strong>：純靠數學演算法預測並記錄波形差異，完全保留原始音訊的每一個位元。</li>
+  <li><strong>有損壓縮（Lossy Compression）</strong>：引入「心理聲學（Psychoacoustics）」原理，分析人類聽覺的盲區與特徵，有意識地刪除人耳難以分辨或不敏感的頻率資訊。</li>
+</ol>
+<h2 id="重點整理"><span id="重點整理"></span>重點整理</h2>
+<ul>
+  <li><strong>壓縮效率對比</strong>：</li>
+  <ul>
+    <li><strong>無損壓縮演算法</strong>：通常能為音訊減少約 <strong>40%～50%</strong> 的容量（壓縮後檔案大小約為原始大小的 50%～60%，MDN 亦曾以產出為原本的 40%～50% 概括，整體代表約省下一半空間）。</li>
+    <li><strong>現代有損壓縮演算法</strong>：能將檔案大幅縮減至原始大小的 <strong>5%～20%</strong>（如 MP3、AAC、Opus），壓縮倍率高達 5 到 20 倍，對一般聽眾而言音質差異極難察覺。</li>
+  </ul>
+  <li><strong>心理聲學核心機制（Psychoacoustics）</strong>：</li>
+  <ul>
+    <li><strong>人耳聽覺極限過濾</strong>：人類耳朵的極限聆聽範圍約在 20 Hz～20,000 Hz，且對超高頻的敏銳度隨年齡大幅退化。編碼器可安全切除 20 kHz 以上的超聲波資訊而不損害聽感。</li>
+    <li><strong>語音頻寬縮減（Bandwidth Reduction）</strong>：如傳統電話系統（G.711）僅保留 300 Hz～3,400 Hz 的頻帶，藉由大幅切除人耳可聽但不影響語意辨識的高低頻，開局就實現了 6:1 的大幅資料瘦身。</li>
+  </ul>
+  <li><strong>立體聲編碼的巧思（聯合立體聲，Joint Stereo）</strong>：</li>
+  <ul>
+    <li><strong>傳統獨立立體聲（Simple Stereo）</strong>：左耳與右耳訊號各自分開獨立儲存，耗用兩倍資料量。</li>
+    <li><strong>中/側立體聲（Mid-Side Stereo, MS）</strong>：多數音樂中，左耳與右耳聽到的聲音大部分是相同的。編碼器改為記錄「兩耳共通的中央聲道」以及「左右耳極微小的差異聲道」。由於差異聲道數值非常小，能以極少資料量儲存，還原時完全無損，非常聰明且節省空間。</li>
+    <li><strong>強度立體聲（Intensity Stereo）</strong>：利用人類對高頻聲音「對相位不敏感、主要只分辨音量大小」的生理特性，將高頻合併，僅記錄方位的強弱指示，進一步在極端情況下省下頻寬。</li>
+  </ul>
+</ul>
+<h2 id="生活類比"><span id="生活類比"></span>生活類比</h2>
+<div class="callout-note">
+  <div class="callout-note-badge">💡 [補充說明] 生活類比</div>
+  <p>音訊壓縮就像視覺處理中的「JPEG 影像壓縮」：人眼對亮度的變化極為敏感，但對色彩細微漸層的微小瑕疵並不敏銳，因此 JPEG 會大膽丟棄人眼看不出的色彩細節來換取十倍的檔案瘦身；有損音訊壓縮正是利用耳朵「聽大聲忽略小聲、聽不到超高頻」的生理盲點，精準剔除不必要的聲音負擔。</p>
+</div>
+<h2 id="實務應用與選擇建議"><span id="實務應用與選擇建議"></span>實務應用與選擇建議</h2>
+<ul>
+  <li><strong>有損壓縮之適用時機</strong>：</li>
+  <ul>
+    <li>網路即時傳輸、串流平台、儲存空間有限的行動裝置。</li>
+    <li>聽覺環境具背景雜音（如搭車、戶外通勤）或使用大眾藍牙耳機時。</li>
+  </ul>
+  <li><strong>無損壓縮之適用時機</strong>：</li>
+  <ul>
+    <li>母帶製作（Mastering）、多軌混音素材（避免反覆壓縮造成失真累積）。</li>
+    <li>永久音樂典藏，或追求極致還原的高階音響聆聽。</li>
+  </ul>
+</ul>
+<h2 id="關聯條目"><span id="關聯條目"></span>關聯條目</h2>
+<ul>
+  <li><a href="./bitrate.html">位元率（Bitrate）與檔案大小</a> - 音訊壓縮的直接目標就是大幅降低位元率</li>
+  <li><a href="./sample-rate.html">取樣率（Sampling Rate）</a> - 頻寬縮減技術透過降低有效取樣率來精簡資料</li>
+  <li><a href="../comparisons/lossy-vs-lossless.html">橫向對比：有損壓縮 vs 無損壓縮</a> - 深入比較兩種壓縮模式的架構優缺點與應用決策</li>
+</ul>
+<h2 id="原始來源"><span id="原始來源"></span>原始來源</h2>
+<ul>
+  <li><strong>文章標題</strong>：<a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Audio_concepts" target="_blank" rel="noopener">Digital audio concepts</a></li>
+  <ul>
+    <li><strong>原始檔案</strong>：<code>raw/02-mdn-digital-audio-concepts.md</code></li>
+    <li><strong>對應章節/段落</strong>：章節「Audio compression basics」、「Psychoacoustics 101」、「Lossless encoder parameters」、「Lossy encoder parameters」、「Joint stereo」</li>
+  </ul>
+</ul>
+      </div>
+    </article>
+
+    <!-- 底部導航 -->
+    <footer class="footer-nav">
+      <p>數位音樂與音質結構化知識庫 ｜ 依據 Andrej Karpathy LLM Wiki 構想建立</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="../../index.html">專案首頁</a> •
+        <a href="../../presentation/index.html">12 頁手繪簡報</a> •
+        <a href="../../index.md">Wiki 目錄 (index.md)</a> •
+        <a href="./compression-basics.md">本篇 Markdown 原文</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

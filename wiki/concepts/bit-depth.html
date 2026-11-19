@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>位元深度（Bit Depth） - 數位音樂與音質知識庫</title>
+  <style>
+
+:root {
+  --bg-cream: #FAF8F5;
+  --card-bg: #FFFFFF;
+  --card-alt: #F6F3EE;
+  --ink-black: #231F20;
+  --ink-muted: #5C5550;
+  --border-ink: #231F20;
+  --border-subtle: #E2DDD5;
+  --accent-warm: #EAD9C8;
+  --accent-badge: #FBF0D9;
+  --accent-callout: #FFF9ED;
+  --accent-green: #E3EDE4;
+  --accent-pink: #F5DCD5;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --code-font: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--ink-black);
+  font-family: var(--font-family);
+  line-height: 1.75;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.wiki-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* 頂部導航列 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 14px;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2rem;
+}
+
+.breadcrumbs {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-muted);
+}
+
+.breadcrumbs a {
+  color: var(--ink-black);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--ink-muted);
+}
+
+.breadcrumbs a:hover {
+  color: #8C4324;
+  border-bottom-style: solid;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--ink-black);
+  background: var(--card-alt);
+  border: 1.5px solid var(--border-ink);
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px rgba(35, 31, 32, 0.8);
+  transition: all 0.12s ease;
+}
+
+.nav-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  background: var(--accent-warm);
+}
+
+.nav-btn.primary {
+  background: var(--ink-black);
+  color: #FAF8F5;
+}
+
+.nav-btn.primary:hover {
+  background: #3B3436;
+}
+
+/* 主文章卡片 */
+.article-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 18px;
+  padding: 2.5rem 2.2rem;
+  box-shadow: 4px 5px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2.5rem;
+}
+
+/* 標題與內文排版 */
+h1.article-title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.5px;
+  color: var(--ink-black);
+  border-bottom: 3px solid var(--border-ink);
+  padding-bottom: 0.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-top: 2.2rem;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1.5px solid var(--border-subtle);
+  padding-bottom: 0.4rem;
+}
+
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background: var(--ink-black);
+  border-radius: 50%;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-top: 1.6rem;
+  margin-bottom: 0.6rem;
+  color: #2D2728;
+}
+
+p {
+  margin-bottom: 1.1rem;
+  font-size: 1.02rem;
+}
+
+/* 金句與引言 */
+.quote-highlight {
+  background: var(--card-alt);
+  border-left: 5px solid var(--border-ink);
+  border-radius: 0 12px 12px 0;
+  padding: 1.1rem 1.4rem;
+  margin: 1.4rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+/* 補充說明 / Note Alert 區塊 */
+.callout-note {
+  background: var(--accent-callout);
+  border: 1.8px solid var(--border-ink);
+  border-radius: 12px;
+  padding: 1.1rem 1.3rem;
+  margin: 1.4rem 0;
+  box-shadow: 2px 3px 0px rgba(35, 31, 32, 0.8);
+}
+
+.callout-note-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: var(--accent-badge);
+  border: 1.2px solid var(--border-ink);
+  padding: 0.15rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+}
+
+/* 清單樣式 */
+ul, ol {
+  margin: 0.8rem 0 1.2rem 1.8rem;
+  font-size: 1rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+li strong {
+  color: var(--ink-black);
+}
+
+/* 表格樣式 */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0 2rem;
+  border: 2px solid var(--border-ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.85);
+  background: #FFFFFF;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+th, td {
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+}
+
+th:last-child, td:last-child {
+  border-right: none;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+th {
+  background: var(--card-alt);
+  font-weight: 800;
+  color: var(--ink-black);
+  border-bottom: 2px solid var(--border-ink);
+}
+
+tr:nth-child(even) td {
+  background: #FCFBF9;
+}
+
+/* 行內代碼與標記 */
+code {
+  font-family: var(--code-font);
+  font-size: 0.88em;
+  background: var(--card-alt);
+  border: 1px solid var(--border-subtle);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  color: #7A331A;
+}
+
+/* 連結樣式 */
+a {
+  color: #1A5FA8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+a:hover {
+  color: #A33A18;
+}
+
+hr.wiki-divider {
+  border: none;
+  border-top: 1.5px dashed var(--border-subtle);
+  margin: 2.2rem 0;
+}
+
+/* 頁尾導航 */
+.footer-nav {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+.footer-nav a {
+  margin: 0 0.5rem;
+  color: var(--ink-black);
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 1rem 0.75rem 3rem;
+  }
+  .article-card {
+    padding: 1.5rem 1.1rem;
+  }
+  h1.article-title {
+    font-size: 1.65rem;
+  }
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="wiki-container">
+    <!-- 頂部導航列 -->
+    <nav class="top-nav">
+      <div class="breadcrumbs">
+        <a href="../../index.html">🏠 首頁</a>
+        <span>/</span>
+        <a href="../../index.html#wiki-catalog">📚 Wiki 導覽</a>
+        <span>/</span>
+        <span>核心概念（Concepts）</span>
+      </div>
+      <div class="nav-actions">
+        <a href="../../presentation/index.html" class="nav-btn primary">▶ 開啟教學簡報</a>
+        <a href="../../index.html" class="nav-btn">← 回首頁</a>
+        <a href="./bit-depth.md" target="_blank" class="nav-btn" title="查看原始 Markdown 文本">📄 Markdown 原文</a>
+      </div>
+    </nav>
+
+    <!-- 文章本體 -->
+    <article class="article-card">
+      <h1 class="article-title">位元深度（Bit Depth）</h1>
+      <div class="article-body">
+<div class="quote-highlight"><strong>一句話白話結論</strong>：位元深度代表電腦測量聲音強弱（振幅）時所使用的精細位元數，它決定了系統的「底噪有多低」以及「動態範圍有多大」。</div>
+<h2 id="概念說明"><span id="概念說明"></span>概念說明</h2>
+<p>當類比聲波被轉換成數位訊號時，系統除了要決定每秒取樣幾次（取樣率），還必須量測每一次取樣時聲波的電壓強度（振幅，Amplitude）。然而，電腦無法儲存無限連續的小數，因此必須將電壓數值四捨五入到最近的離散階梯數值，這個過程稱為「量化（Quantization）」。</p>
+<p>用來記錄每個取樣點數值的二進位位元數，就稱為「位元深度（Bit Depth）」，有時也被稱為字長（Word Length）或解析度（Resolution）。位元深度越高，能表示的階梯數目呈指數成長，可記錄的音量強弱對比（動態範圍）就越寬廣，背景底噪就越微弱。</p>
+<h2 id="重點整理"><span id="重點整理"></span>重點整理</h2>
+<ul>
+  <li><strong>音量測量的刻度精細度（階梯數）</strong>：</li>
+  <ul>
+    <li>電腦以二進位儲存資料，每增加 1 個位元，可表達的振幅階梯數就呈倍數翻倍（<code>2^X</code>）。</li>
+    <li><strong>16-bit</strong>：擁有 65,536 個音量階梯。</li>
+    <li><strong>24-bit</strong>：高達 1,677 萬個音量階梯（精細度是 16-bit 的 256 倍）。</li>
+  </ul>
+  <li><strong>動態範圍與底噪（每增加 1 位元約拓展 6 dB）</strong>：</li>
+  <ul>
+    <li><strong>動態範圍（Dynamic Range）</strong>：指系統能記錄的「最大音量」與「最小背景雜音（底噪）」之間的落差。</li>
+    <li><strong>16-bit</strong>：提供約 96 dB 的動態範圍（底噪極微弱，約 -96 dBFS）。</li>
+    <li><strong>24-bit</strong>：提供約 144 dB 的動態範圍（底噪降至約 -144 dBFS，幾乎是物理測量極限）。</li>
+  </ul>
+  <li><strong>量化誤差與抖動技術（Dither）</strong>：</li>
+  <ul>
+    <li>將連續音量四捨五入成整數時產生的微小偏差稱為「量化誤差」。</li>
+    <li>在音訊領域中，工程師會刻意加入極微弱的隨機雜訊（稱為「抖動，Dither」），巧妙破除數位顆粒感，將其轉化為均勻平順、人耳難以察覺的平穩底噪。</li>
+  </ul>
+  <li><strong>定點數 vs. 浮點數（32-bit Float）</strong>：</li>
+  <ul>
+    <li>播放檔案多採用 16-bit 或 24-bit 定點數。</li>
+    <li>專業音訊編輯軟體（DAW）內部運算廣泛採用 <strong>32-bit 浮點數</strong>，擁有超過 1,500 dB 的超大動態範圍，讓音樂人在後製混音時即便瞬間音量過大爆表，也不會直接產生破音（Clipping）。</li>
+  </ul>
+</ul>
+<h2 id="生活類比"><span id="生活類比"></span>生活類比</h2>
+<div class="callout-note">
+  <div class="callout-note-badge">💡 [補充說明] 生活類比</div>
+  <p>可以將位元深度想像成一把「尺的刻度精細度」：16-bit 的尺刻度已經細如毫釐，而 24-bit 的刻度更達到奈米級。刻度越細，測量聲音高低起伏時就不需要大幅四捨五入，背景雜音（測量誤差）就越小。</p>
+</div>
+<h2 id="實務應用與選擇建議"><span id="實務應用與選擇建議"></span>實務應用與選擇建議</h2>
+<ul>
+  <li><strong>最終聆聽與發行（CD / 串流播放）</strong>：</li>
+  <ul>
+    <li><strong>16-bit</strong>：對於一般消費者在居家或耳機聆聽環境，96 dB 的動態範圍已遠超過環境底噪與人耳正常忍受範圍，完全足以提供乾淨無噪的音樂體驗。</li>
+  </ul>
+  <li><strong>錄音與音樂製作階段</strong>：</li>
+  <ul>
+    <li><strong>24-bit</strong>：錄音時強烈建議採用 24-bit。因為底噪極低（-144 dB），錄音師可以故意保留充裕的安全空間（稱為動態餘裕，Headroom），避免瞬間大動態造成破音（Clipping），後續混音調整彈性極大。</li>
+    <li><strong>32-bit Float</strong>：在軟體內部匯出分軌（Stems）、中間混音檔時非常適合，避免任何處理過程中的數位削波與多次抖動損失。</li>
+  </ul>
+</ul>
+<h2 id="常見迷思與 FAQ"><span id="常見迷思與-FAQ"></span>常見迷思與 FAQ</h2>
+<ul>
+  <li><strong>Q：位元深度較低時，波形會像階梯一樣鋸齒狀不滑順嗎？</strong></li>
+  <ul>
+    <li>A：不會。鋸齒階梯只是圖解量化概念時的視覺簡化。在實際數位音訊中，配合抖動（Dither）與 DAC 濾波重組，輸出的是平滑連續的波形，位元深度影響的是「底噪的音量大小」，而不是波形邊緣是否鋸齒。</li>
+  </ul>
+</ul>
+<h2 id="關聯條目"><span id="關聯條目"></span>關聯條目</h2>
+<ul>
+  <li><a href="./sample-rate.html">取樣率（Sampling Rate）</a> - 取樣率決定頻率上限，位元深度決定動態範圍與底噪</li>
+  <li><a href="./bitrate.html">位元率（Bitrate）與檔案大小</a> - 位元深度直接影響未壓縮音訊的資料傳輸率</li>
+  <li><a href="../myths/higher-sample-rate-and-bit-depth.html">常見迷思：取樣率與位元深度越高越好嗎？</a> - 深入探討人耳是否能分辨 16-bit 與 24-bit</li>
+</ul>
+<h2 id="原始來源"><span id="原始來源"></span>原始來源</h2>
+<ul>
+  <li><strong>文章標題</strong>：<a href="https://www.izotope.com/community/blog/digital-audio-basics-sample-rate-and-bit-depth" target="_blank" rel="noopener">Digital audio basics: audio sample rate and bit depth</a></li>
+  <ul>
+    <li><strong>原始檔案</strong>：<code>raw/01-izotope-digital-audio-basics.md</code></li>
+    <li><strong>對應章節/段落</strong>：章節「What is bit depth in audio?」、「Can you hear the difference between audio bit depths?」、「What should my sample rate and bit depth be?」</li>
+  </ul>
+  <li><strong>文章標題</strong>：<a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Audio_concepts" target="_blank" rel="noopener">Digital audio concepts</a></li>
+  <ul>
+    <li><strong>原始檔案</strong>：<code>raw/02-mdn-digital-audio-concepts.md</code></li>
+    <li><strong>對應章節/段落</strong>：章節「Sampling audio (Resolution)」、「Samples」</li>
+  </ul>
+</ul>
+      </div>
+    </article>
+
+    <!-- 底部導航 -->
+    <footer class="footer-nav">
+      <p>數位音樂與音質結構化知識庫 ｜ 依據 Andrej Karpathy LLM Wiki 構想建立</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="../../index.html">專案首頁</a> •
+        <a href="../../presentation/index.html">12 頁手繪簡報</a> •
+        <a href="../../index.md">Wiki 目錄 (index.md)</a> •
+        <a href="./bit-depth.md">本篇 Markdown 原文</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

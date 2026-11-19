@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>實務指南：Apple Music 無損音訊與播放設備限制（Apple Music Lossless Guide） - 數位音樂與音質知識庫</title>
+  <style>
+
+:root {
+  --bg-cream: #FAF8F5;
+  --card-bg: #FFFFFF;
+  --card-alt: #F6F3EE;
+  --ink-black: #231F20;
+  --ink-muted: #5C5550;
+  --border-ink: #231F20;
+  --border-subtle: #E2DDD5;
+  --accent-warm: #EAD9C8;
+  --accent-badge: #FBF0D9;
+  --accent-callout: #FFF9ED;
+  --accent-green: #E3EDE4;
+  --accent-pink: #F5DCD5;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --code-font: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--ink-black);
+  font-family: var(--font-family);
+  line-height: 1.75;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.wiki-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* 頂部導航列 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 14px;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2rem;
+}
+
+.breadcrumbs {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-muted);
+}
+
+.breadcrumbs a {
+  color: var(--ink-black);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--ink-muted);
+}
+
+.breadcrumbs a:hover {
+  color: #8C4324;
+  border-bottom-style: solid;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--ink-black);
+  background: var(--card-alt);
+  border: 1.5px solid var(--border-ink);
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px rgba(35, 31, 32, 0.8);
+  transition: all 0.12s ease;
+}
+
+.nav-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.9);
+  background: var(--accent-warm);
+}
+
+.nav-btn.primary {
+  background: var(--ink-black);
+  color: #FAF8F5;
+}
+
+.nav-btn.primary:hover {
+  background: #3B3436;
+}
+
+/* 主文章卡片 */
+.article-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-ink);
+  border-radius: 18px;
+  padding: 2.5rem 2.2rem;
+  box-shadow: 4px 5px 0px rgba(35, 31, 32, 0.9);
+  margin-bottom: 2.5rem;
+}
+
+/* 標題與內文排版 */
+h1.article-title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.5px;
+  color: var(--ink-black);
+  border-bottom: 3px solid var(--border-ink);
+  padding-bottom: 0.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-top: 2.2rem;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1.5px solid var(--border-subtle);
+  padding-bottom: 0.4rem;
+}
+
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background: var(--ink-black);
+  border-radius: 50%;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-top: 1.6rem;
+  margin-bottom: 0.6rem;
+  color: #2D2728;
+}
+
+p {
+  margin-bottom: 1.1rem;
+  font-size: 1.02rem;
+}
+
+/* 金句與引言 */
+.quote-highlight {
+  background: var(--card-alt);
+  border-left: 5px solid var(--border-ink);
+  border-radius: 0 12px 12px 0;
+  padding: 1.1rem 1.4rem;
+  margin: 1.4rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+/* 補充說明 / Note Alert 區塊 */
+.callout-note {
+  background: var(--accent-callout);
+  border: 1.8px solid var(--border-ink);
+  border-radius: 12px;
+  padding: 1.1rem 1.3rem;
+  margin: 1.4rem 0;
+  box-shadow: 2px 3px 0px rgba(35, 31, 32, 0.8);
+}
+
+.callout-note-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: var(--accent-badge);
+  border: 1.2px solid var(--border-ink);
+  padding: 0.15rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+}
+
+/* 清單樣式 */
+ul, ol {
+  margin: 0.8rem 0 1.2rem 1.8rem;
+  font-size: 1rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+li strong {
+  color: var(--ink-black);
+}
+
+/* 表格樣式 */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0 2rem;
+  border: 2px solid var(--border-ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.85);
+  background: #FFFFFF;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+th, td {
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+}
+
+th:last-child, td:last-child {
+  border-right: none;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+th {
+  background: var(--card-alt);
+  font-weight: 800;
+  color: var(--ink-black);
+  border-bottom: 2px solid var(--border-ink);
+}
+
+tr:nth-child(even) td {
+  background: #FCFBF9;
+}
+
+/* 行內代碼與標記 */
+code {
+  font-family: var(--code-font);
+  font-size: 0.88em;
+  background: var(--card-alt);
+  border: 1px solid var(--border-subtle);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  color: #7A331A;
+}
+
+/* 連結樣式 */
+a {
+  color: #1A5FA8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+a:hover {
+  color: #A33A18;
+}
+
+hr.wiki-divider {
+  border: none;
+  border-top: 1.5px dashed var(--border-subtle);
+  margin: 2.2rem 0;
+}
+
+/* 頁尾導航 */
+.footer-nav {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+.footer-nav a {
+  margin: 0 0.5rem;
+  color: var(--ink-black);
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 1rem 0.75rem 3rem;
+  }
+  .article-card {
+    padding: 1.5rem 1.1rem;
+  }
+  h1.article-title {
+    font-size: 1.65rem;
+  }
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="wiki-container">
+    <!-- 頂部導航列 -->
+    <nav class="top-nav">
+      <div class="breadcrumbs">
+        <a href="../../index.html">🏠 首頁</a>
+        <span>/</span>
+        <a href="../../index.html#wiki-catalog">📚 Wiki 導覽</a>
+        <span>/</span>
+        <span>橫向對比（Comparisons）</span>
+      </div>
+      <div class="nav-actions">
+        <a href="../../presentation/index.html" class="nav-btn primary">▶ 開啟教學簡報</a>
+        <a href="../../index.html" class="nav-btn">← 回首頁</a>
+        <a href="./apple-music-lossless.md" target="_blank" class="nav-btn" title="查看原始 Markdown 文本">📄 Markdown 原文</a>
+      </div>
+    </nav>
+
+    <!-- 文章本體 -->
+    <article class="article-card">
+      <h1 class="article-title">實務指南：Apple Music 無損音訊與播放設備限制（Apple Music Lossless Guide）</h1>
+      <div class="article-body">
+<div class="quote-highlight"><strong>一句話白話結論</strong>：Apple Music 雖然提供了 ALAC 無損曲庫，但標準藍牙連線並不支援無損；一般搭配 AirPods 藍牙聆聽時會自動轉為有損 AAC，要聽真無損主要需使用有線連接（特定專利協定如 Apple Vision Pro 為少數無線例外），若要播放高於 48 kHz 的音訊更需外接 DAC。</div>
+<h2 id="概念說明"><span id="概念說明"></span>概念說明</h2>
+<p>Apple Music 提供「無損音訊（Lossless）」與「高解析度無損（Hi-Res Lossless）」兩種品質規格（採用 ALAC 編碼）。許多音樂愛好者開啟該設定後，誤以為戴上任何 AirPods 無線耳機就能享受無損音質。</p>
+<p>然而，音訊播放鏈受制於「傳輸通道」與「終端解碼硬體」的物理限制。Apple 官方支援文件明確指出，一般的藍牙無線連線目前在技術上並不支援無損音訊傳輸。要真正聆聽到無損音質，必須滿足特定的設備搭配與連接條件。</p>
+<h2 id="重點整理：各設備播放條件與硬體限制"><span id="重點整理各設備播放條件與硬體限制"></span>重點整理：各設備播放條件與硬體限制</h2>
+<h3 id="1. 標準藍牙耳機的限制：AirPods 藍牙傳輸「並非無損」"><span id="1-標準藍牙耳機的限制AirPods-藍牙傳輸並非無損"></span>1. 標準藍牙耳機的限制：AirPods 藍牙傳輸「並非無損」</h3>
+<ul>
+  <li><strong>標準藍牙協定限制</strong>：</li>
+  <ul>
+    <li><strong>所有透過標準藍牙連線的耳機</strong>（包含 AirPods 1/2/3/4、AirPods Pro 系列、無線狀態下的 AirPods Max）以及絕大多數 Beats 無線耳機，在藍牙傳輸時<strong>一律採用有損的 Apple AAC 藍牙編碼</strong>。</li>
+    <li>就算 Apple Music 串流下載的是 ALAC 無損檔案，在透過藍牙發送到耳機的瞬間，手機依然必須將其重新壓縮成有損的 AAC 訊號。</li>
+  </ul>
+  <li><strong>例外與特殊支援情境</strong>：</li>
+  <ul>
+    <li><strong>有線例外（AirPods Max USB-C 版）</strong>：在更新至最新韌體後，使用官方 <strong>USB-C 對 USB-C 連接線</strong>以有線方式連接 iPhone/iPad/Mac，即可實現真正的有線無損播放。</li>
+    <li><strong>無線例外（Apple Vision Pro 專有通訊協定）</strong>：搭配 AirPods 4（或更新版本）、AirPods Pro 2（USB-C 版）或 Powerbeats Pro 2 時，能透過 Vision Pro 獨家研發的超低延遲專有無線音訊協定實現無線無損聆聽（非走常規標準藍牙）。</li>
+  </ul>
+</ul>
+<h3 id="2. iPhone 與 iPad 的播放條件"><span id="2-iPhone-與-iPad-的播放條件"></span>2. iPhone 與 iPad 的播放條件</h3>
+<ul>
+  <li><strong>標準無損（最高至 48 kHz）</strong>：</li>
+  <ul>
+    <li>使用內建揚聲器，或透過有線耳機（如 3.5mm 或 Lightning/USB-C 轉接線）連接耳機或主動式喇叭。</li>
+  </ul>
+  <li><strong>高解析無損（Hi-Res Lossless，高於 48 kHz）</strong>：</li>
+  <ul>
+    <li><strong>必須外接數位類比轉換器（External DAC）</strong>。iPhone 與 iPad 內部硬體無法原生輸出高於 48 kHz 的音訊訊號，需依賴外接 DAC 處理。</li>
+    <li>> [!NOTE] [補充說明 / 待進一步文件確認]</li>
+  </ul>
+</ul>
+<h3 id="3. Mac 電腦的播放條件"><span id="3-Mac-電腦的播放條件"></span>3. Mac 電腦的播放條件</h3>
+<ul>
+  <li><strong>內建支援</strong>：</li>
+  <ul>
+    <li>14 吋與 16 吋 MacBook Pro 原生支援高達 <strong>96 kHz</strong> 取樣率的耳機孔輸出。</li>
+  </ul>
+  <li><strong>其餘 Mac 機型</strong>：</li>
+  <ul>
+    <li>若要播放高於 48 kHz 的高解析無損音訊，同樣必須外接 DAC。</li>
+  </ul>
+</ul>
+<h3 id="4. Apple TV 4K、HomePod 與其他平台"><span id="4-Apple-TV-4KHomePod-與其他平台"></span>4. Apple TV 4K、HomePod 與其他平台</h3>
+<ul>
+  <li><strong>Apple TV 4K</strong>：必須透過 HDMI 連接線接駁至家庭劇院 AV 擴大機。此外，「高解析度無損（Hi-Res Lossless）」僅在 <strong>Apple TV 4K（第 3 代或後續機型）</strong> 提供。</li>
+  <li><strong>HomePod / HomePod mini</strong>：可於「家庭」App 的設定中開啟無損串流播放。</li>
+  <li><strong>Windows PC 與 Android 裝置</strong>：安裝 Apple Music App 後，以有線耳機連接即可播放無損；若欲播放高於 48 kHz 音訊，同樣需視電腦音效卡或手機硬體搭配外接 DAC。</li>
+</ul>
+<h2 id="生活類比"><span id="生活類比"></span>生活類比</h2>
+<div class="callout-note">
+  <div class="callout-note-badge">💡 [補充說明] 生活類比</div>
+  <p>藍牙耳機聽無損，就像「<strong>高山純淨山泉水遇到了裝有濾網的水龍頭</strong>」：水庫（Apple Music 雲端伺服器）流出的水質毫無疑問是頂級純淨的 ALAC 無損原水，但在流進水龍頭接上藍牙耳機時，受限於藍牙水管的管徑容量，強制通過了細密濾網（AAC 有損編碼壓縮），最終倒進杯子（耳朵聽到）的水雖然依舊甘甜可口，但已不再是未經修飾的原裝山泉水。要喝到真正無損，必須接上寬口金屬硬水管（有線連接）。</p>
+</div>
+<h2 id="實務應用與設定指南"><span id="實務應用與設定指南"></span>實務應用與設定指南</h2>
+<ul>
+  <li><strong>如何開啟無損設定</strong>：</li>
+  <ul>
+    <li><strong>iOS / iPadOS</strong>：進入「設定」<code>\to</code>「App」<code>\to</code>「音樂」<code>\to</code>「音質」，開啟「無損音訊」，並可針對行動網路、Wi-Fi 串流與下載分別指定品質。</li>
+    <li><strong>macOS</strong>：開啟音樂 App <code>\to</code>「設定」<code>\to</code>「播放」標籤頁，勾選「無損音訊」。</li>
+  </ul>
+  <li><strong>流量與儲存空間警告</strong>：</li>
+  <ul>
+    <li>官方明確提醒：串流無損音訊將<strong>大幅增加行動網路流量消耗</strong>；下載無損或高解析音訊更會<strong>快速佔滿手機儲存容量</strong>。若平時僅使用一般藍牙耳機通勤，建議串流設定維持「高品質（256 kbps AAC）」即可，既省流量又省空間。</li>
+  </ul>
+</ul>
+<h2 id="關聯條目"><span id="關聯條目"></span>關聯條目</h2>
+<ul>
+  <li><a href="../formats/alac.html">ALAC 格式專頁</a> - 解析 Apple Music 核心採用的 Apple 無損格式規格</li>
+  <li><a href="../formats/aac.html">AAC 格式專頁</a> - 解密 AirPods 與 Apple 藍牙設備為何預設使用 AAC</li>
+  <li><a href="./lossy-vs-lossless.html">橫向對比：有損壓縮 vs 無損壓縮</a> - 比較不同壓縮格式在檔案流量與音質還原上的差異</li>
+  <li><a href="../myths/higher-sample-rate-and-bit-depth.html">常見迷思：取樣率與位元深度越高越好嗎？</a> - 探討 24/192 高解析音質在實際聆聽中的心理與物理盲點</li>
+</ul>
+<h2 id="原始來源"><span id="原始來源"></span>原始來源</h2>
+<ul>
+  <li><strong>文章標題</strong>：<a href="https://support.apple.com/en-us/118295" target="_blank" rel="noopener">About lossless audio in Apple Music</a></li>
+  <ul>
+    <li><strong>原始檔案</strong>：<code>raw/05-apple-lossless-audio.md</code></li>
+    <li><strong>對應章節/段落</strong>：章節「What you need to know about lossless in Apple Music」、「About lossless audio with Apple and Beats headphones」、「How to listen to lossless on your iPhone or iPad」、「How to listen to lossless on your Mac」</li>
+  </ul>
+  <li><strong>文章標題</strong>：<a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Audio_codecs" target="_blank" rel="noopener">Web audio codec guide</a></li>
+  <ul>
+    <li><strong>原始檔案</strong>：<code>raw/03-mdn-audio-codecs.md</code></li>
+    <li><strong>對應章節/段落</strong>：章節「ALAC (Apple Lossless Audio Codec)」、「AAC (Advanced Audio Coding)」</li>
+  </ul>
+</ul>
+      </div>
+    </article>
+
+    <!-- 底部導航 -->
+    <footer class="footer-nav">
+      <p>數位音樂與音質結構化知識庫 ｜ 依據 Andrej Karpathy LLM Wiki 構想建立</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="../../index.html">專案首頁</a> •
+        <a href="../../presentation/index.html">12 頁手繪簡報</a> •
+        <a href="../../index.md">Wiki 目錄 (index.md)</a> •
+        <a href="./apple-music-lossless.md">本篇 Markdown 原文</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

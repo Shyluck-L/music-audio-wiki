@@ -310,7 +310,7 @@
     <!-- 專案工程亮點 -->
     <div class="highlights-box">
       <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem;">🛠️ 專案工程與自動化門禁（Quality Gates）</h3>
-      <p style="font-size: 0.92rem; color: var(--ink-muted);">本專案採用嚴謹的 Python 狀態機（workflow.py）嚴格控制製作流程，確保內容絕無幻覺並通過自動化視覺檢驗：</p>
+      <p style="font-size: 0.92rem; color: var(--ink-muted);">本專案採用嚴謹的 Python 狀態機（workflow.py）嚴格控制製作流程，降低內容幻覺與錯誤引用的風險並通過自動化視覺檢驗：</p>
       <ul class="highlights-list">
         <li>
           <span>🏷️</span>
@@ -332,7 +332,7 @@
     </div>
 
     <!-- Wiki 知識庫分類目錄 -->
-    <h2 class="section-title">數位音訊知識庫導覽（Wiki Pages）</h2>
+    <h2 class="section-title" id="wiki-catalog">數位音訊知識庫導覽（Wiki Pages）</h2>
     <div class="grid-2">
       <div class="card">
         <div class="card-title">
@@ -341,24 +341,47 @@
         </div>
         <p>奠定數位音樂理解的基石，涵蓋取樣定理、動態範圍、位元率與心理聲學。</p>
         <ul style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.8;">
-          <li><a href="wiki/concepts/sample-rate.md" class="card-link">取樣率（Sampling Rate）</a></li>
-          <li><a href="wiki/concepts/bit-depth.md" class="card-link">位元深度（Bit Depth）</a></li>
-          <li><a href="wiki/concepts/bitrate.md" class="card-link">位元率（Bitrate）與檔案大小</a></li>
-          <li><a href="wiki/concepts/compression-basics.md" class="card-link">音訊壓縮原理與心理聲學</a></li>
+          <li><a href="wiki/concepts/sample-rate.html" class="card-link">取樣率（Sampling Rate）</a> <a href="wiki/concepts/sample-rate.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
+          <li><a href="wiki/concepts/bit-depth.html" class="card-link">位元深度（Bit Depth）</a> <a href="wiki/concepts/bit-depth.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
+          <li><a href="wiki/concepts/bitrate.html" class="card-link">位元率（Bitrate）與檔案大小</a> <a href="wiki/concepts/bitrate.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
+          <li><a href="wiki/concepts/compression-basics.html" class="card-link">音訊壓縮原理與心理聲學</a> <a href="wiki/concepts/compression-basics.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-title">
-          <span>格式與對比（Formats & Comparisons）</span>
-          <span class="card-tag">6 篇</span>
+          <span>音訊格式（Formats）</span>
+          <span class="card-tag">4 篇</span>
         </div>
-        <p>主流音訊編碼深度剖析、生態系相容性與日常生活實戰決策指南。</p>
+        <p>主流音訊編碼深度剖析、技術特性、專利背景與生態系相容性。</p>
         <ul style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.8;">
-          <li><a href="wiki/formats/mp3.md" class="card-link">MP3 編碼技術</a> ｜ <a href="wiki/formats/aac.md" class="card-link">AAC 進階音訊編碼</a></li>
-          <li><a href="wiki/formats/flac.md" class="card-link">FLAC 無損編碼</a> ｜ <a href="wiki/formats/alac.md" class="card-link">ALAC Apple 無損</a></li>
-          <li><a href="wiki/comparisons/lossy-vs-lossless.md" class="card-link">有損 vs 無損壓縮橫向對比</a></li>
-          <li><a href="wiki/comparisons/apple-music-lossless.md" class="card-link">Apple Music 無損與播放設備限制</a></li>
+          <li><a href="wiki/formats/mp3.html" class="card-link">MP3（MPEG-1 Audio Layer III）</a> <a href="wiki/formats/mp3.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
+          <li><a href="wiki/formats/aac.html" class="card-link">AAC（進階音訊編碼）</a> <a href="wiki/formats/aac.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
+          <li><a href="wiki/formats/flac.html" class="card-link">FLAC（自由無損音訊編碼）</a> <a href="wiki/formats/flac.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
+          <li><a href="wiki/formats/alac.html" class="card-link">ALAC（Apple 無損音訊編碼）</a> <a href="wiki/formats/alac.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>橫向對比（Comparisons）</span>
+          <span class="card-tag">2 篇</span>
+        </div>
+        <p>日常生活實戰決策指南，包含有損/無損權衡與串流硬體播放限制。</p>
+        <ul style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.8;">
+          <li><a href="wiki/comparisons/lossy-vs-lossless.html" class="card-link">有損 vs 無損壓縮橫向對比</a> <a href="wiki/comparisons/lossy-vs-lossless.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
+          <li><a href="wiki/comparisons/apple-music-lossless.html" class="card-link">Apple Music 無損音訊與播放設備限制</a> <a href="wiki/comparisons/apple-music-lossless.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>迷思破解（Myths & FAQs）</span>
+          <span class="card-tag">1 篇</span>
+        </div>
+        <p>基於音訊物理學與生理聽覺極限，破除高取樣率與階梯鋸齒波形神話。</p>
+        <ul style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.8;">
+          <li><a href="wiki/myths/higher-sample-rate-and-bit-depth.html" class="card-link">取樣率與位元深度越高，音質就一定越好嗎？</a> <a href="wiki/myths/higher-sample-rate-and-bit-depth.md" style="font-size:0.78rem;color:var(--ink-muted);text-decoration:none;">[MD]</a></li>
         </ul>
       </div>
     </div>
