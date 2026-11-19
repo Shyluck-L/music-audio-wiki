@@ -1,14 +1,14 @@
 # 數位音樂與音質：LLM Wiki 知識庫 ＆ 12 頁教學簡報
 > **Digital Audio & Sound Quality: LLM Wiki & Interactive Presentation**
 
-本專案依據 **Andrej Karpathy 的 LLM Wiki 構想** 構建，實現「底層權威知識庫」與「上層視覺簡報」的**完全解耦**。專案以 5 篇權威文獻為接地基礎，經由 Python 狀態機控制器驅動的 **Graph / Loop 工作流程**，打造出嚴格無幻覺、直覺親切且具備暖白文青黑白手繪 Doodle 風格的 12 頁互動式 HTML5 教學簡報。
+本專案依據 **Andrej Karpathy 的 LLM Wiki 構想** 構建，實現「底層權威知識庫」與「上層視覺簡報」的**解耦架構**。專案以 5 篇權威文獻為接地基礎，經由 Python 狀態機控制器驅動的 **Graph / Loop 工作流程**，打造出高度嚴謹接地、直覺親切且具備暖白文青黑白手繪 Doodle 風格的 12 頁互動式 HTML5 教學簡報。
 
 ---
 
 ## 🌟 核心特點與亮點
 
 1. **知識庫與展示層徹底解耦**：
-   * `wiki/` 保持純淨結構化知識，嚴禁參雜任何簡報排版代碼或特效，作為單一事實來源（Single Source of Truth）。
+   * `wiki/` 保持純淨結構化知識，不參雜簡報排版代碼或特效，作為單一事實來源（Single Source of Truth）。
    * `presentation/index.html` 為純原生獨立 HTML5 簡報，不依賴外部龐大框架，具備即時鍵盤導航、進度條、講稿備註抽屜與真實來源跳轉。
 2. **直覺通俗、無晦澀公式**：
    * 專為無音訊工程背景的音樂愛好者設計，用「每秒拍照影格率」解釋取樣率，用「量身高的尺刻度」解釋位元深度，用「強音遮蔽弱音」解釋有損壓縮，破解 Hi-Res 與階梯鋸齒波形迷思。
@@ -21,8 +21,8 @@
 ## 🚀 快速開始與簡報存取入口
 
 * **線上直接瀏覽（GitHub Pages）**：
-  * **簡報正式入口**：`https://<username>.github.io/<repo-name>/presentation/`
-  * **首頁與 Wiki 導覽**：`https://<username>.github.io/<repo-name>/`
+  * **首頁與 Wiki 導覽**：[https://Shyluck-L.github.io/music-audio-wiki/](https://Shyluck-L.github.io/music-audio-wiki/)
+  * **簡報正式入口**：[https://Shyluck-L.github.io/music-audio-wiki/presentation/](https://Shyluck-L.github.io/music-audio-wiki/presentation/)
 * **本機直接開啟**：
   * 雙擊開啟 `presentation/index.html` 即可立即全螢幕播放簡報。
   * 快捷鍵支援：`←` / `→`（上一頁／下一頁）、`Home` / `End`（首頁／尾頁）、點選右上角「講稿備註」可呼叫補充講解抽屜。
@@ -77,14 +77,15 @@ music-audio-wiki/
 flowchart TD
     N0["Node 0: 設計規格確認 (design-specs.json)"] --> N1["Node 1: Wiki 檢索與接地 (wiki/ & raw/)"]
     N1 --> N2["Node 2: 證據卡與大綱建立 (evidence-cards & outline)"]
-    N2 --> G1{"Gate 1: 資料完整性檢驗"}
-    G1 -- "FAIL (最多 2 次)" --> N2
+    N2 --> G1{"Gate 1: 資料完整性檢驗 (check_gate1.py)"}
+    G1 -- "FAIL (Route A, 最多 2 次)" --> N2
     G1 -- "PASS" --> N3["Node 3: 逐頁簡報文字稿起草 (slide-scripts.md)"]
-    N3 --> G2{"Gate 2: 事實與文字稿雙層審查"}
-    G2 -- "FAIL (最多 2 次)" --> N3
+    N3 --> N4["Node 4: 內容與事實檢查<br/>(Agent 語意審查 + Gate 2 程式化檢核)"]
+    N4 --> G2{"Gate 2 雙層判定"}
+    G2 -- "FAIL (Route B, 最多 2 次)" --> N3
     G2 -- "PASS" --> N5["Node 5: HTML 簡報生成 (presentation/index.html)"]
-    N5 --> G3{"Gate 3: 多解析度瀏覽器檢驗"}
-    G3 -- "FAIL (最多 2 次)" --> N5
+    N5 --> G3{"Gate 3: 多解析度瀏覽器檢驗 (run_gate3_browser_test.py)"}
+    G3 -- "FAIL (Route C, 最多 2 次)" --> N5
     G3 -- "PASS" --> HR{"人工驗收審查 (Human Acceptance)"}
     HR -- "退回文案/重點 (content)" --> N3
     HR -- "退回排版/視覺 (style)" --> N5
@@ -97,13 +98,13 @@ flowchart TD
 1. **Gate 1：資料完整性與來源路徑檢核 (`scratch/check_gate1.py`)**
    * 驗證 12 頁大綱與證據卡存在性。
    * 檢查每張卡片皆包含清晰主張、白話比喻、Wiki 連結與 Raw 原始文獻定位。
-2. **Gate 2：事實正確性與文字稿檢核 (`scratch/check_gate2.py` + AI 語意審查)**
-   * 驗證金句、解析、生活類比（標註 `[補充說明]`）、視覺指引與來源齊全。
-   * 嚴格核對技術主張（如 FLAC/ALAC 解碼一致性前提、24-bit 與錄音 Headroom 關係），消除未經證實的推論與數值混淆。
+2. **Node 4 內容與事實檢查 ＆ Gate 2 檢驗機制**
+   * **Agent AI 語意事實審查**：逐頁核對文字稿與簡報中的客觀技術主張、數值、比例是否均有 Wiki 與 Raw 的直接依據，檢驗是否有未經標註的外部推論、過度肯定或數據混淆。
+   * **Gate 2 程式化結構檢核 (`scratch/check_gate2.py`)**：自動驗證金句、解析、生活類比（標註 `[補充說明]`）、視覺指引與來源齊全度，確保篇章結構完備。
 3. **Gate 3：多解析度瀏覽器畫面與功能檢核 (`scratch/run_gate3_browser_test.py`)**
-   * 啟動本機 Headless Chrome，在 **720p（1280×720）**、**1080p（1920×1080）** 及 **筆電常見（1366×768）** 下渲染。
-   * 驗證全 12 頁零文字裁切、零內部滾動、鍵盤導航全部暢通。
-   * 專項量測：透過 Chrome DevTools `getBBox()` 實測 SVG 標籤文字真實邊界，確保左右邊距皆具備充裕呼吸空間（> 62px），絕無貼邊。
+   * 啟動本機 Headless Chrome，在 **720p（1280×720）**、**1080p（1920×1080）** 及 **筆電常見（1366×768）** 三種解析度下渲染。
+   * 驗證全 12 頁在目標解析度下無文字溢出、無內部捲動，且鍵盤導航功能測試正常。
+   * 專項量測：透過 Chrome DevTools `getBBox()` 實測第 8 頁 SVG 標籤文字邊界，實測左右邊距具備充裕空間（> 62px），符合無貼邊與包覆標準。
 
 ---
 
@@ -133,14 +134,14 @@ python scratch/run_gate3_browser_test.py   # Gate 3 瀏覽器實際檢驗
   * 第 1 頁｜**獨立封面**：我們每天聽的數位音樂，到底是什麼？
   * 第 2 頁｜**取樣率**：電腦每秒對聲音「拍幾次照」？
   * 第 3 頁｜**位元深度**：量測音量大小的「尺」有多精細？
-  * 第 4 頁｜**位元率與檔案大小**：一首歌到底吃掉多少空間？
+  * 第 4 頁｜**為什麼音樂需要壓縮？**：一首歌竟然有 34.5 MB！
 * **模組二：壓縮的魔法與格式對決**
-  * 第 5 頁｜**壓縮原理**：人耳聽不到的，就別留著佔空間！
-  * 第 6 頁｜**MP3 的逆襲**：跨時代的普及功臣與相容性之王
-  * 第 7 頁｜**AAC 串流主力**：現代網路音樂的最佳平衡點
-  * 第 8 頁｜**FLAC vs ALAC**：無損音質雙雄，解碼完全相同？
+  * 第 5 頁｜**有損壓縮**：聰明騙過耳朵的減重術
+  * 第 6 頁｜**無損壓縮**：完好如初的收納拉鍊
+  * 第 7 頁｜**常見有損格式大比拼**：MP3 vs. AAC
+  * 第 8 頁｜**常見無損格式雙雄**：FLAC vs. ALAC
 * **模組三：實戰決策與迷思破解**
   * 第 9 頁｜**實務決策**：日常聽歌，我真的需要「無損」嗎？
-  * 第 10 頁｜**高規格音質迷思**：取樣率與位元深度越高，音質就一定越好嗎？
-  * 第 11 頁｜**Apple Music 實戰**：戴 AirPods 真的能聽無損嗎？
-  * 第 12 頁｜**核心回顧與決策指南**：回歸音樂本質，找到最適合你的收聽模式
+  * 第 10 頁｜**破解迷思**：追求 Hi-Res 24-bit / 192 kHz，真的有神效嗎？
+  * 第 11 頁｜**迷思破解**：戴 AirPods 聽無損，為什麼聽起來沒差？
+  * 第 12 頁｜**總結**：找回聽音樂的感動（影響音質的三大核心平衡）
