@@ -1,0 +1,120 @@
+---
+title: About lossless audio in Apple Music
+author: Apple Support
+url: https://support.apple.com/en-us/118295
+fetch_date: 2026-11-18
+---
+
+About lossless audio in Apple Music - Apple Support
+
+About lossless audio in Apple Music
+
+With an Apple Music subscription, you can turn on lossless audio across all of your devices and hear every preserved detail from the original recording.
+
+What you need to know about lossless in Apple Music
+
+Streaming lossless audio over a cellular or Wi-Fi network consumes significantly more data. Downloading lossless audio uses significantly more space on your device. Higher resolutions use more data than lower ones.
+
+Learn which headphones you can use with lossless audio
+
+To get a lossless version of music that you already downloaded from Apple Music, delete the music, turn on lossless for your device, then redownload the music from the Apple Music catalog.
+
+How to listen to lossless on your iPhone or iPad
+
+What you need
+
+You can listen to lossless on an iPhone or iPad updated to the latest version of iOS or iPadOS using:
+
+A wired connection to headphones, receivers, or powered speakersThe built-in speakersAn external digital-to-analog converter to listen to songs at sample rates higher than 48 kHz
+
+How to turn lossless on or off
+
+Go to Settings.Tap Apps. Tap Music.Tap Audio Quality.Tap Lossless Audio to turn it on or off. From here, you can choose the audio quality for streaming and downloading audio.
+
+How to listen to lossless on your Mac
+
+What you need
+
+You can listen to lossless on a Mac updated to the latest version of macOS using:
+
+A wired connection to headphones, receivers, or powered speakersThe built-in speakers14-inch MacBook Pro and 16-inch MacBook Pro support native playback of songs at sample rates up to 96 kHz.To listen to songs at sample rates higher than 48 kHz on other Mac computers, you need an external digital-to-analog converter.
+
+How to turn lossless on or off
+
+Open the Apple Music app.In the menu bar, choose Music, then select Preferences.Click the Playback tab.Under Audio Quality, select or unselect "Lossless audio" to turn it on or off. From here, you can also change the settings for streaming and downloading lossless.
+
+How to listen to lossless on your HomePod
+
+What you need
+
+A HomePod or HomePod mini updated to the latest software versionThe Home app on the iPhone or iPad that was used to set up your HomePod
+
+How to turn lossless on or off
+
+On your iPhone or iPad, open the Home app.Go to the Home tab.Tap the More button.Tap Home Settings.Under People, tap your name.Tap Apple Music.Turn Lossless Audio on or off.
+
+How to listen to lossless on your Apple TV 4K
+
+What you need
+
+Update your Apple TV 4K to the latest version of tvOSConnect your Apple TV 4K to an AV receiver using an HDMI cable
+
+How to turn lossless on or off
+
+Go to Settings.Select Apps.Select Music.Select Audio Quality. From here, you can choose the audio quality for streaming audio.
+
+Hi-Res Lossless is available only on Apple TV 4K (3rd generation or later).
+
+How to listen to lossless on your Apple Vision Pro
+
+What you need
+
+You can listen to lossless on Apple Vision Pro using:
+
+The built-in speakersAirPods 4 or later, AirPods Pro 3,  AirPods Pro 2 with USB-C Charging Case, or Powerbeats Pro 2
+
+How to turn lossless on or off
+
+Go to Settings.Tap Apps.Tap Music.Under Audio, tap Audio Quality.Turn Lossless Audio on or off.
+
+How to listen to lossless on your Apple HomeView
+
+What you need
+
+Update your Apple HomeView to the latest software version The Home app on the iPhone or iPad that was used to set up your Apple HomeView
+
+How to turn lossless on or off
+
+On your iPhone or iPad, open the Home app.Go to the Home tab.Tap the More button.Tap Home Settings.Under People, tap your name.Tap Apple Music.Turn Lossless Audio on or off.
+
+About lossless audio with Apple and Beats headphones
+
+AirPods 3 or earlier, AirPods Pro 1, AirPods Pro 2 with Lightning Charging Case, AirPods Max, and most Beats wireless headphones use Apple AAC Bluetooth Codec to ensure excellent audio quality. However, Bluetooth connections aren't lossless. 
+
+You can listen to lossless audio with AirPods Max 1 (USB-C) and AirPods Max 2 . Update your iPhone, iPad, or Mac to the most recent software version, and update your AirPods Max to the most recent firmware version. Use the included USB-C to USB-C cable to connect your AirPods Max to your iPhone, iPad, or Mac with a USB-C port. Or, use a USB-C to USB-A cable to connect your AirPods Max to a Mac with a USB-A port.
+
+How to listen to lossless on your Android device
+
+What you need
+
+You can listen to lossless on an Android device with the latest version of the Apple Music app using:
+
+A wired connection to headphones, receivers, or powered speakersTo listen to songs at sample rates higher than 48 kHz, you might need an external digital-to-analog converter.1
+
+How to turn lossless on or off
+
+Open the Apple Music app.Tap the More button.Tap Settings.Tap Audio Quality.Tap Lossless to turn it on or off. From here, you can choose the audio quality for streaming and downloading audio.
+
+How to listen to lossless on your PC
+
+What you need
+
+You can listen to lossless on a PC with the Apple Music app for Windows using:
+
+The built-in speakersA wired connection to headphones, receivers, or powered speakersAn external digital-to-analog converter to listen to songs at sample rates higher than 48 kHz2
+
+How to turn lossless on or off
+
+Open the Apple Music app.At the top, click Sidebar Actions, then click Settings.Click Playback.Under Audio Quality, turn Lossless audio on or off. From here, you can choose the audio quality for streaming and downloading audio.
+
+1To see if your Android device requires an external digital-to-analog converter, check with your device's manufacturer.2To see if your PC requires an external digital-to-analog converter, check with your computer's manufacturer.Apple Music availability might vary by country or region. Learn what's available in your country or region.

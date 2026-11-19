@@ -1,0 +1,24 @@
+# Python 快取與虛擬環境
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+venv/
+env/
+
+# 瀏覽器自動化測試快取與中介檔
+scratch/chrome_profile/
+scratch/test_presentation.html
+se-metadata.json
+
+# 作業系統暫存檔
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 編輯器與 IDE 設定檔
+.vscode/
+.idea/
+*.swp
+*.swo

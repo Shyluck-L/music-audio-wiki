@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我們每天聽的數位音樂，到底是什麼？｜數位音樂與音質全指南</title>
+  <style>
+    /* ==========================================================================
+       1. 全域變數與暖白手繪 Doodle 風格設定
+       ========================================================================== */
+    :root {
+      --bg-primary: #FAF8F5;          /* 奶白／米白底色 */
+      --bg-card: #FFFFFF;             /* 紙質柔白卡片 */
+      --bg-card-subtle: #F6F2EB;      /* 微暖底色襯托 */
+      --text-main: #2A2421;           /* 炭黑／極深咖啡 */
+      --text-body: #4A423D;           /* 深暖灰內文 */
+      --text-muted: #827870;          /* 柔和次要說明 */
+      --ink-black: #231F20;           /* 手繪墨水線條色 */
+      --accent-blush: #F5DCD5;        /* 腮紅淡粉點綴 */
+      --accent-butter: #FBF0D9;       /* 溫暖奶油黃點綴 */
+      --accent-sage: #E3EDE4;         /* 柔和草本綠點綴 */
+      --accent-sky: #E1ECF4;          /* 柔和粉藍點綴 */
+      --border-ink: rgba(35, 31, 32, 0.16);
+      --border-ink-strong: rgba(35, 31, 32, 0.35);
+      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+
+    /* ==========================================================================
+       2. 投影片主容器 (嚴格 16:9，防止溢出)
+       ========================================================================== */
+    #presentation-wrapper {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5vh 1.5vw 72px 1.5vw; /* 底部預留控制列空間 */
+    }
+
+    #presentation-frame {
+      width: 100%;
+      height: 100%;
+      max-width: calc((100vh - 82px) * 16 / 9);
+      max-height: calc(100vw * 9 / 16);
+      aspect-ratio: 16 / 9;
+      position: relative;
+      background: var(--bg-card);
+      border-radius: 24px;
+      border: 2px solid var(--border-ink);
+      box-shadow: 0 12px 36px rgba(42, 36, 33, 0.06), 0 2px 6px rgba(42, 36, 33, 0.04);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 頂部手繪感進度條 */
+    #progress-container {
+      width: 100%;
+      height: 5px;
+      background: rgba(35, 31, 32, 0.06);
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 50;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 8.33%;
+      background: var(--ink-black);
+      border-radius: 0 4px 4px 0;
+      transition: width 0.35s cubic-bezier(0.2, 0.8, 0.25, 1);
+    }
+
+    /* ==========================================================================
+       3. 投影片頁面結構與切換
+       ========================================================================== */
+    .slide {
+      width: 100%;
+      height: 100%;
+      padding: 2.8% 4.2% 2.8% 4.2%;
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.22s ease-in-out;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      z-index: 10;
+    }
+
+    /* 頁首標籤與標題 */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5%;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .badge-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .module-badge {
+      font-size: clamp(0.72rem, 1.0vw, 0.82rem);
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: var(--bg-card-subtle);
+      color: var(--text-body);
+      border: 1px dashed var(--border-ink-strong);
+      letter-spacing: 0.02em;
+    }
+
+    .slide-number-pill {
+      font-size: clamp(0.72rem, 1.0vw, 0.82rem);
+      font-weight: 700;
+      padding: 3px 8px;
+      color: var(--text-muted);
+    }
+
+    .slide-title {
+      font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+      font-weight: 800;
+      line-height: 1.25;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    /* 金句 Hook 卡 */
+    .golden-hook {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent-butter);
+      border: 1.5px solid var(--border-ink);
+      border-radius: 12px;
+      padding: 7px 14px;
+      font-size: clamp(0.86rem, 1.15vw, 0.98rem);
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2%;
+      flex-shrink: 0;
+    }
+
+    .golden-hook svg {
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       4. 多樣化版面構圖系統 (Visual Rhythm)
+       ========================================================================== */
+    
+    /* 構圖 A: 傳統經典雙欄 (左文字，右插畫) */
+    .layout-classic-split {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 3.5%;
+      align-items: center;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* 構圖 B: 左右互換 (左插畫，右文字) */
+    .layout-reversed-split {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 3.5%;
+      align-items: center;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* 構圖 C: 大圖置中構圖 (頂部大插圖，底部橫向 2 卡) */
+    .layout-hero-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .hero-center-visual {
+      width: 100%;
+      max-width: 720px;
+      height: 165px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-center-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      width: 100%;
+    }
+
+    /* 構圖 D: 大數字震撼排版 (Big Number Stat Layout) */
+    .layout-big-number {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 3%;
+      align-items: center;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .stat-badge-box {
+      background: var(--accent-blush);
+      border: 2px solid var(--ink-black);
+      border-radius: 20px;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: 3px 3px 0px var(--ink-black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-huge-number {
+      font-size: clamp(2.4rem, 4.0vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--ink-black);
+    }
+
+    .stat-unit-label {
+      font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+      font-weight: 700;
+      color: var(--text-body);
+    }
+
+    .stat-math-formula {
+      font-size: 0.82rem;
+      background: #FFFFFF;
+      border: 1px solid var(--border-ink);
+      border-radius: 8px;
+      padding: 4px 10px;
+      margin-top: 6px;
+      font-family: monospace;
+    }
+
+    /* 構圖 E: 左右對決分欄構圖 (Split Comparison Layout - MP3 vs AAC) */
+    .layout-versus-split {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .vs-column {
+      background: var(--bg-card-subtle);
+      border: 2px solid var(--ink-black);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    .vs-badge-center {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent-butter);
+      border: 2px solid var(--ink-black);
+      font-size: 1.05rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0px var(--ink-black);
+    }
+
+    /* 第 9 頁情境對抗專屬卡片樣式 (Enriched Scenario Cards) */
+    .scenario-card {
+      background: var(--bg-card-subtle);
+      border: 2px solid var(--ink-black);
+      border-radius: 18px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      height: 100%;
+      justify-content: space-between;
+      box-shadow: 2.5px 2.5px 0px var(--ink-black);
+      overflow: hidden;
+    }
+
+    .scenario-header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .scenario-title {
+      font-size: clamp(1.15rem, 1.55vw, 1.35rem);
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .scenario-format-pill {
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      border: 1.5px solid var(--ink-black);
+      color: var(--text-main);
+      box-shadow: 1.5px 1.5px 0px var(--ink-black);
+      margin-top: 2px;
+    }
+
+    .scenario-visual-box {
+      width: 100%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scenario-features {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      text-align: left;
+    }
+
+    .scenario-feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-ink);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: clamp(0.84rem, 1.05vw, 0.90rem);
+      line-height: 1.4;
+      color: var(--text-body);
+    }
+
+    .scenario-feature-item strong {
+      color: var(--text-main);
+    }
+
+    /* 構圖 F: 橫向傳輸管線構圖 (Horizontal Pipeline Flow Layout) */
+    .layout-pipeline-flow {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      justify-content: center;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .pipeline-visual-box {
+      width: 100%;
+      height: 155px;
+      background: var(--bg-card-subtle);
+      border: 2px solid var(--ink-black);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      box-shadow: 3px 3px 0px var(--ink-black);
+    }
+
+    .pipeline-points-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      width: 100%;
+    }
+
+    /* ==========================================================================
+       5. 通用卡片與手繪容器樣式
+       ========================================================================== */
+    .points-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .point-card {
+      background: var(--bg-card-subtle);
+      border: 1.5px solid var(--border-ink);
+      border-radius: 14px;
+      padding: 11px 15px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: transform 0.15s ease;
+    }
+
+    .point-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--ink-black);
+    }
+
+    .point-number {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent-blush);
+      border: 1.5px solid var(--ink-black);
+      font-size: 0.82rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .point-text {
+      flex: 1;
+    }
+
+    .point-title {
+      font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .point-desc {
+      font-size: clamp(0.82rem, 1.0vw, 0.90rem);
+      color: var(--text-body);
+      line-height: 1.48;
+    }
+
+    .doodle-hero-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card-subtle);
+      border: 2px solid var(--ink-black);
+      border-radius: 20px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 3px 3px 0px var(--ink-black);
+    }
+
+    .doodle-hero-svg {
+      width: 100%;
+      height: 100%;
+      max-height: 280px;
+      object-fit: contain;
+    }
+
+    /* 頁底來源標籤與講稿按鈕 */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1.0%;
+      margin-top: auto;
+      border-top: 1px dashed var(--border-ink);
+      flex-shrink: 0;
+    }
+
+    .source-links {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .source-tag {
+      color: var(--text-body);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .source-tag:hover {
+      color: var(--ink-black);
+      background: var(--accent-butter);
+      border-radius: 4px;
+      text-decoration: none;
+      padding: 1px 4px;
+    }
+
+    .notes-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--ink-black);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      box-shadow: 1.5px 1.5px 0px var(--ink-black);
+      transition: all 0.15s ease;
+    }
+
+    .notes-btn:hover {
+      background: var(--accent-butter);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       6. 第 1 頁獨立封面 (Standalone Cover)
+       ========================================================================== */
+    .cover-slide {
+      padding: 2.8% 6%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .cover-slide.active {
+      display: flex;
+    }
+
+    .cover-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      background: var(--accent-sage);
+      border: 1.5px solid var(--ink-black);
+      font-size: clamp(0.75rem, 1.0vw, 0.85rem);
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .cover-title {
+      font-size: clamp(1.8rem, 2.7vw, 2.3rem);
+      font-weight: 900;
+      line-height: 1.2;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .cover-subtitle {
+      font-size: clamp(0.92rem, 1.25vw, 1.12rem);
+      font-weight: 500;
+      color: var(--text-body);
+      max-width: 800px;
+    }
+
+    .cover-hero-wrapper {
+      width: 100%;
+      max-width: 560px;
+      height: clamp(140px, 24vh, 190px);
+      margin: 1% 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cover-intro-cards {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+      max-width: 820px;
+      justify-content: center;
+    }
+
+    .cover-card {
+      flex: 1;
+      background: var(--bg-card-subtle);
+      border: 1.5px solid var(--border-ink);
+      border-radius: 14px;
+      padding: 9px 15px;
+      text-align: left;
+      font-size: clamp(0.78rem, 0.98vw, 0.88rem);
+      color: var(--text-body);
+      line-height: 1.45;
+    }
+
+    .cover-card strong {
+      color: var(--text-main);
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.92rem;
+    }
+
+    /* ==========================================================================
+       7. 第 12 頁獨立收尾總結版型 (Dedicated Closing Summary Layout)
+       ========================================================================== */
+    .summary-slide {
+      padding: 2.2% 5.0%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .summary-slide.active {
+      display: flex;
+    }
+
+    .summary-conclusion-box {
+      background: var(--accent-butter);
+      border: 2px solid var(--ink-black);
+      border-radius: 16px;
+      padding: 8px 20px;
+      box-shadow: 3px 3px 0px var(--ink-black);
+      max-width: 860px;
+      margin-bottom: 8px;
+    }
+
+    .summary-conclusion-text {
+      font-size: clamp(1.05rem, 1.45vw, 1.25rem);
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+
+    .summary-triad-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      width: 100%;
+      max-width: 920px;
+      margin: 8px 0;
+    }
+
+    .summary-triad-card {
+      background: #FFFFFF;
+      border: 2px solid var(--ink-black);
+      border-radius: 16px;
+      padding: 12px 12px;
+      box-shadow: 3px 3px 0px var(--ink-black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      text-align: center;
+      transition: transform 0.15s ease;
+    }
+
+    .summary-triad-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .triad-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--ink-black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2px;
+    }
+
+    .triad-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .triad-desc {
+      font-size: 0.82rem;
+      color: var(--text-body);
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       8. 浮動控制列與抽屜彈窗
+       ========================================================================== */
+    #controls-bar {
+      position: fixed;
+      bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-card);
+      border: 2px solid var(--ink-black);
+      padding: 6px 18px;
+      border-radius: 9999px;
+      box-shadow: 3px 3px 0px var(--ink-black);
+      z-index: 100;
+    }
+
+    .nav-btn {
+      background: var(--bg-card-subtle);
+      border: 1.5px solid var(--ink-black);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: var(--accent-butter);
+      transform: translateY(-1px);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-color: var(--border-ink);
+    }
+
+    .slide-counter {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      min-width: 58px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slide-counter span {
+      color: var(--text-main);
+    }
+
+    .dots-container {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--bg-card-subtle);
+      border: 1.5px solid var(--ink-black);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .dot.active {
+      background: var(--ink-black);
+      transform: scale(1.3);
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-body);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      color: var(--ink-black);
+    }
+
+    /* 講稿抽屜彈窗 */
+    #notes-drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(35, 31, 32, 0.35);
+      backdrop-filter: blur(2px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #notes-drawer-overlay.open {
+      display: flex;
+    }
+
+    #notes-modal {
+      width: 90%;
+      max-width: 680px;
+      max-height: 80vh;
+      background: var(--bg-card);
+      border: 2px solid var(--ink-black);
+      border-radius: 20px;
+      box-shadow: 5px 5px 0px var(--ink-black);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .notes-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--ink-black);
+      padding-bottom: 10px;
+    }
+
+    .notes-modal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .notes-close-btn {
+      background: var(--bg-card-subtle);
+      border: 1.5px solid var(--ink-black);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #notes-modal-body {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-body);
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    #notes-modal-body p {
+      margin-bottom: 10px;
+    }
+
+    #notes-modal-body ul {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+
+    /* 手繪向量公用文字樣式 (確保 13px 以上清晰可見) */
+    .doodle-text {
+      font-family: var(--font-stack);
+      font-size: 14px;
+      font-weight: bold;
+      fill: var(--ink-black);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部進度條 -->
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <main id="presentation-wrapper">
+    <article id="presentation-frame">
+
+      <!-- ==================== 第 1 頁：獨立封面 (構圖: Standalone Cover) ==================== -->
+      <section class="slide active cover-slide" id="slide-1" data-index="1">
+        <header class="cover-header">
+          <div class="cover-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            數位音樂與音質全指南
+          </div>
+          <h1 class="slide-title cover-title">我們每天聽的數位音樂，到底是什麼？</h1>
+          <p class="cover-subtitle">從耳機裡的動人旋律，到手機裡的 0 與 1：一般人也能懂的無痛入門</p>
+        </header>
+
+        <div class="cover-hero-wrapper">
+          <svg class="doodle-hero-svg" viewBox="0 0 600 240" fill="none">
+            <!-- 唱片黑膠手繪 -->
+            <circle cx="210" cy="120" r="85" fill="#FAF8F5" stroke="#231F20" stroke-width="2.5"/>
+            <circle cx="210" cy="120" r="72" stroke="#231F20" stroke-width="1.2" stroke-dasharray="4 6"/>
+            <circle cx="210" cy="120" r="58" stroke="#231F20" stroke-width="1.2" stroke-dasharray="8 5"/>
+            <circle cx="210" cy="120" r="44" stroke="#231F20" stroke-width="1.2"/>
+            <circle cx="210" cy="120" r="26" fill="#F5DCD5" stroke="#231F20" stroke-width="2"/>
+            <circle cx="210" cy="120" r="7" fill="#231F20"/>
+            <!-- 頭戴式耳機 -->
+            <path d="M300 130 C300 65, 410 65, 410 130" stroke="#231F20" stroke-width="4" stroke-linecap="round"/>
+            <path d="M315 80 C340 70, 370 70, 395 80" stroke="#F5DCD5" stroke-width="6" stroke-linecap="round"/>
+            <!-- 耳罩 -->
+            <rect x="288" y="125" width="24" height="42" rx="12" fill="#F5DCD5" stroke="#231F20" stroke-width="2.2"/>
+            <rect x="398" y="125" width="24" height="42" rx="12" fill="#F5DCD5" stroke="#231F20" stroke-width="2.2"/>
+            <!-- 音符與波浪 -->
+            <path d="M70 120 Q110 90, 140 120 T210 120" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-dasharray="5 5"/>
+            <path d="M430 140 Q470 110, 520 130" stroke="#231F20" stroke-width="2" stroke-linecap="round"/>
+            <!-- 飛舞小音符 -->
+            <g transform="translate(110, 60)">
+              <path d="M10 25 V10 L25 5 V20" stroke="#231F20" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="7" cy="25" r="4.5" fill="#231F20"/>
+              <circle cx="22" cy="20" r="4.5" fill="#231F20"/>
+            </g>
+            <g transform="translate(470, 70)">
+              <path d="M8 20 V6 C14 6, 18 10, 18 15" stroke="#231F20" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="5" cy="20" r="4.5" fill="#231F20"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="cover-intro-cards">
+          <div class="cover-card">
+            <strong>🎧 日常好奇</strong>
+            為什麼同一首歌在不同平台聽起來不太一樣？無損、高解析到底是什麼意思？
+          </div>
+          <div class="cover-card">
+            <strong>🌱 輕鬆入門</strong>
+            用最親切的生活手繪圖解，帶你一次看懂數位音樂與音質的真實奧秘，告別規格焦慮。
+          </div>
+        </div>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【講稿備註】</strong></p>
+          <p>歡迎來到這份數位音樂指南！我們每天打開手機戴上耳機聽音樂，常在 Spotify 或 Apple Music 看到「44.1 kHz」、「24-bit」或「無損」等專有名詞，許多人往往感到困惑甚至產生追求高規格的焦慮。</p>
+          <p>這份簡報完全不需要音訊工程背景，我們將透過 12 頁親切的手繪插畫與生活比喻，從聲音如何變成數字、為什麼音樂需要壓縮，到如何理性選擇格式與耳機，用最直覺的大白話解開迷思！</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 2 頁：取樣率 (構圖: 橫向流程與捕蟲網) ==================== -->
+      <section class="slide" id="slide-2" data-index="2">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組一：聲音的數位化基礎</span>
+              <span class="slide-number-pill">02 / 12</span>
+            </div>
+            <h2 class="slide-title">取樣率（Sample Rate）：電腦每秒對聲音「拍幾次照」？</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>取樣率管的是能記錄到的「最高聲音頻率」，而不是讓波形看起來像樓梯還是平滑！</span>
+        </div>
+
+        <div class="layout-classic-split">
+          <div class="points-column">
+            <div class="point-card">
+              <div class="point-number">1</div>
+              <div class="point-text">
+                <div class="point-title">聲音的時間快照</div>
+                <div class="point-desc">取樣率是電腦每秒對聲波電壓測量的次數（以 kHz 為單位），就像相機每秒連拍的影格率。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">2</div>
+              <div class="point-text">
+                <div class="point-title">人耳極限與兩倍定律</div>
+                <div class="point-desc">人類聽覺極限約為 20 kHz；奈奎斯特取樣定理指出取樣率需大於 2 倍（40 kHz 以上）才能忠實還原。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">3</div>
+              <div class="point-text">
+                <div class="point-title">為什麼是 44.1 與 48 kHz</div>
+                <div class="point-desc">現實中的濾波器需要緩衝空間，CD 標準 44.1 kHz 與常見影音規格 48 kHz，都是為了在 20 kHz 外留出安全的濾波過渡頻帶（Transition Band）以避免混疊雜訊。</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="doodle-hero-container">
+            <svg class="doodle-hero-svg" viewBox="0 0 360 270" fill="none">
+              <!-- 相機連拍手繪 (大文字) -->
+              <rect x="25" y="40" width="90" height="70" rx="14" fill="#FFFFFF" stroke="#231F20" stroke-width="2.2"/>
+              <rect x="42" y="30" width="30" height="10" rx="4" fill="#F5DCD5" stroke="#231F20" stroke-width="2"/>
+              <circle cx="70" cy="75" r="22" fill="#FBF0D9" stroke="#231F20" stroke-width="2.2"/>
+              <circle cx="70" cy="75" r="9" fill="#231F20"/>
+              <text x="70" y="132" text-anchor="middle" class="doodle-text" font-size="14">每秒拍 4.4 萬次</text>
+              <!-- 捕蟲網手繪 -->
+              <ellipse cx="240" cy="75" rx="50" ry="34" fill="#E1ECF4" stroke="#231F20" stroke-width="2.2"/>
+              <path d="M240 109 Q240 175, 290 195" stroke="#231F20" stroke-width="2.2" stroke-linecap="round"/>
+              <text x="240" y="80" text-anchor="middle" class="doodle-text" font-size="15">頻率捕蟲網</text>
+              <!-- 頻率刻度標示 -->
+              <rect x="110" y="165" width="235" height="46" rx="10" fill="#FFFFFF" stroke="#231F20" stroke-width="2"/>
+              <rect x="112" y="167" width="120" height="42" rx="8" fill="#E3EDE4"/>
+              <text x="172" y="193" text-anchor="middle" class="doodle-text" font-size="13">人耳 0~20 kHz</text>
+              <rect x="234" y="167" width="55" height="42" fill="#FBF0D9"/>
+              <text x="261" y="193" text-anchor="middle" class="doodle-text" font-size="13">44.1k</text>
+              <rect x="290" y="167" width="53" height="42" rx="8" fill="#F5DCD5"/>
+              <text x="316" y="193" text-anchor="middle" class="doodle-text" font-size="13">48k緩衝</text>
+            </svg>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/concepts/sample-rate.md" target="_blank" class="source-tag">wiki/sample-rate.md</a>
+            <a href="../raw/01-izotope-digital-audio-basics.md" target="_blank" class="source-tag">raw/01 iZotope</a>
+            <a href="../raw/02-mdn-digital-audio-concepts.md" target="_blank" class="source-tag">raw/02 MDN</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(2)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】頻率捕蟲網</strong></p>
+          <p>取樣率就像「頻率捕蟲網」：網口有多寬，就能攔截多高頻率的聲波。高於網口的超高頻若不先用濾波器濾掉，反而會折射掉進網內變成刺耳的數位混疊雜訊（Aliasing）。</p>
+          <p><strong>【技術要點】</strong>在訊號帶寬受限並配合理想重組濾波前提下，理論最高可記錄頻率為取樣率的一半（奈奎斯特頻率）。現實中的抗混疊與重建濾波器無法做到垂直一刀切斷，因此 CD 44.1 kHz 預留了 2.05 kHz 緩衝（還原至 22.05 kHz），影音 48 kHz 則預留 4 kHz 緩衝（還原至 24 kHz）。聲音經 DAC 濾波後輸出的是平滑波形，波形本身沒有鋸齒！</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 3 頁：位元深度 (構圖: 左尺規，右動態對比) ==================== -->
+      <section class="slide" id="slide-3" data-index="3">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組一：聲音的數位化基礎</span>
+              <span class="slide-number-pill">03 / 12</span>
+            </div>
+            <h2 class="slide-title">位元深度（Bit Depth）：量測音量大小的「尺」有多精細？</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>位元深度決定的是系統底噪有多安靜，16-bit 已經提供極為寬廣純淨的動態空間！</span>
+        </div>
+
+        <div class="layout-reversed-split">
+          <div class="doodle-hero-container">
+            <svg class="doodle-hero-svg" viewBox="0 0 360 270" fill="none">
+              <!-- 大尺規 -->
+              <rect x="85" y="25" width="65" height="215" rx="12" fill="#FFFFFF" stroke="#231F20" stroke-width="2.5"/>
+              <line x1="125" y1="45" x2="150" y2="45" stroke="#231F20" stroke-width="2.5"/>
+              <line x1="130" y1="75" x2="150" y2="75" stroke="#231F20" stroke-width="1.8"/>
+              <line x1="125" y1="105" x2="150" y2="105" stroke="#231F20" stroke-width="2.5"/>
+              <line x1="130" y1="135" x2="150" y2="135" stroke="#231F20" stroke-width="1.8"/>
+              <line x1="125" y1="165" x2="150" y2="165" stroke="#231F20" stroke-width="2.5"/>
+              <line x1="125" y1="215" x2="150" y2="215" stroke="#231F20" stroke-width="2.5"/>
+              <!-- 大字體尺規標示 -->
+              <text x="75" y="50" text-anchor="end" class="doodle-text" font-size="14">0 dBFS (頂端)</text>
+              <text x="75" y="220" text-anchor="end" class="doodle-text" font-size="14">-96 dBFS (底噪)</text>
+              <!-- 右側純淨動態展示 -->
+              <rect x="180" y="35" width="150" height="195" rx="16" fill="#F5DCD5" stroke="#231F20" stroke-width="2.2"/>
+              <text x="255" y="75" text-anchor="middle" class="doodle-text" font-size="16">96 dB 動態範圍</text>
+              <path d="M195 130 Q225 80, 255 130 T315 130" stroke="#231F20" stroke-width="3" stroke-linecap="round"/>
+              <text x="255" y="175" text-anchor="middle" class="doodle-text" font-size="14">平滑平穩重組</text>
+              <text x="255" y="198" text-anchor="middle" class="doodle-text" font-size="13">日常播放極為純淨</text>
+            </svg>
+          </div>
+
+          <div class="points-column">
+            <div class="point-card">
+              <div class="point-number">1</div>
+              <div class="point-text">
+                <div class="point-title">音量的細膩刻度尺</div>
+                <div class="point-desc">位元深度決定記錄音量電壓時的刻度階梯數（16-bit 有 65,536 階，24-bit 有 1,677 萬階）。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">2</div>
+              <div class="point-text">
+                <div class="point-title">每多 1 bit 增加約 6 dB</div>
+                <div class="point-desc">位元深度決定動態範圍大小；CD 規格 16-bit 提供約 96 dB 的動態範圍（系統底噪約 -96.3 dBFS）。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">3</div>
+              <div class="point-text">
+                <div class="point-title">日常環境已極度乾淨</div>
+                <div class="point-desc">在常規居家播放環境下，16-bit 提供的 96 dB 內部動態範圍已極其寬廣，足以安靜重現絕大多數音樂細節。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/concepts/bit-depth.md" target="_blank" class="source-tag">wiki/bit-depth.md</a>
+            <a href="../raw/01-izotope-digital-audio-basics.md" target="_blank" class="source-tag">raw/01 iZotope</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(3)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】量身高的精細尺規</strong></p>
+          <p>就像量身高，刻度越細密（位元深度越高），四捨五入的量化誤差就越小。在播放端透過 DAC 濾波重組平滑輸出，波形邊緣本來就不存在階梯鋸齒。</p>
+          <p><strong>【技術要點】</strong>位元深度決定了數位系統內部的量化雜訊與動態範圍（約 6.02 dB/bit）。16-bit 提供約 96 dB 動態範圍（底噪約 -96.3 dBFS），24-bit 則高達 144 dB（底噪約 -144.5 dBFS）。實務上常視需求加入微弱抖動（Dither）消除失真。注意 dBFS 為數位系統內部相對電平，不可直接與環境噪音聲壓級 dB SPL 混淆。</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 4 頁：壓縮必要性 (構圖: 大數字震撼排版) ==================== -->
+      <section class="slide" id="slide-4" data-index="4">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組一：聲音的數位化基礎</span>
+              <span class="slide-number-pill">04 / 12</span>
+            </div>
+            <h2 class="slide-title">為什麼音樂需要壓縮？一首歌竟然有 34.5 MB！</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>未壓縮音訊完全能播放，但一首 3 分鐘歌曲要吃掉 34.5 MB 頻寬與儲存空間！</span>
+        </div>
+
+        <div class="layout-big-number">
+          <!-- 大數字震撼看板 -->
+          <div class="stat-badge-box">
+            <div class="stat-huge-number">34.5</div>
+            <div class="stat-unit-label">MB / 一首 3 分鐘歌曲</div>
+            <div class="stat-math-formula">48 kHz × 16-bit × 雙聲道 = 192 KB/s</div>
+            <p style="font-size:0.86rem; color:var(--text-body); margin-top:8px; line-height:1.4;">
+              未壓縮 PCM 體積極大<br>串流必須依賴壓縮技術
+            </p>
+          </div>
+
+          <div class="points-column">
+            <div class="point-card">
+              <div class="point-number">1</div>
+              <div class="point-text">
+                <div class="point-title">未壓縮音訊代價高昂</div>
+                <div class="point-desc">未壓縮 PCM 雖能完美播放，但龐大的檔案體積會造成巨大的網路傳輸與裝置儲存負擔。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">2</div>
+              <div class="point-text">
+                <div class="point-title">清楚的計算前提</div>
+                <div class="point-desc">在 48 kHz、16-bit、雙聲道（立體聲）標準影音規格下，傳輸速率高達 192 KB/s。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">3</div>
+              <div class="point-text">
+                <div class="point-title">一首歌高達 34.56 MB</div>
+                <div class="point-desc">短短 3 分鐘未壓縮音訊耗費 34.56 MB（約 34.5 MB）；壓縮後僅需 20~40 KB/s 即可流暢播放。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/concepts/bitrate.md" target="_blank" class="source-tag">wiki/bitrate.md</a>
+            <a href="../raw/02-mdn-digital-audio-concepts.md" target="_blank" class="source-tag">raw/02 MDN</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(4)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】抽真空收納袋</strong></p>
+          <p>就像寄送蓬鬆的羽絨被，直接寄送需要巨大的紙箱（未壓縮 PCM 34.5 MB）；音訊壓縮就像抽真空收納袋，將體積縮小後才能輕鬆塞進手機或透過網路快速傳送。</p>
+          <p><strong>【計算推導】</strong></p>
+          <ul>
+            <li>規格前提：雙聲道、16-bit、48 kHz 取樣率。</li>
+            <li>傳輸速率：48,000 × 16 × 2 = 1,536,000 bps = 192 kB/s。</li>
+            <li>3 分鐘檔案體積：192,000 bytes/s × 180 s = 34,560,000 bytes ≈ 34.56 MB。</li>
+            <li>對比常見串流 160～320 kbps 壓縮音訊（示意約 20～40 KB/s），壓縮能大幅降低頻寬與儲存壓力。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 5 頁：有損壓縮 (構圖: 大圖置中構圖) ==================== -->
+      <section class="slide" id="slide-5" data-index="5">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組二：壓縮原理與格式地圖</span>
+              <span class="slide-number-pill">05 / 12</span>
+            </div>
+            <h2 class="slide-title">有損壓縮：聰明騙過耳朵的減重術</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>心理聲學的巧思：移除人耳難辨的被遮蔽聲音，使檔案體積大幅縮減（常見節省 80%～90% 頻寬）！</span>
+        </div>
+
+        <div class="layout-hero-center">
+          <div class="hero-center-visual">
+            <svg class="doodle-hero-svg" viewBox="0 0 600 160" fill="none">
+              <!-- 大雨傘聽覺遮蔽（加寬加高，內距充裕） -->
+              <path d="M80 95 C80 15, 400 15, 400 95 Z" fill="#F5DCD5" stroke="#231F20" stroke-width="2.6"/>
+              <path d="M240 95 V138 C240 146, 226 146, 226 140" stroke="#231F20" stroke-width="3" stroke-linecap="round"/>
+              <text x="240" y="55" text-anchor="middle" class="doodle-text" font-size="15" font-weight="800">大鼓雷聲 (強音聽覺遮蔽)</text>
+              <text x="240" y="78" text-anchor="middle" class="doodle-text" font-size="12.5" fill="#5A5350">人耳聽覺自動忽略周邊被掩蓋的微弱聲音</text>
+              <!-- 傘下丟掉的小落葉與背景微音 (獨立標籤，無重疊貼邊) -->
+              <rect x="105" y="108" width="105" height="26" rx="8" fill="#FBF0D9" stroke="#231F20" stroke-width="1.4" stroke-dasharray="3 3"/>
+              <text x="157" y="125" text-anchor="middle" class="doodle-text" font-size="12.5">微弱落葉 (剃除)</text>
+              <rect x="275" y="108" width="105" height="26" rx="8" fill="#FBF0D9" stroke="#231F20" stroke-width="1.4" stroke-dasharray="3 3"/>
+              <text x="327" y="125" text-anchor="middle" class="doodle-text" font-size="12.5">環境微音 (剃除)</text>
+              <!-- 右側體積精簡標籤 -->
+              <path d="M420 70 H465 M455 60 L470 70 L455 80" stroke="#231F20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="480" y="45" width="110" height="52" rx="12" fill="#E3EDE4" stroke="#231F20" stroke-width="1.8"/>
+              <text x="535" y="67" text-anchor="middle" class="doodle-text" font-size="12">節省傳輸頻寬</text>
+              <text x="535" y="86" text-anchor="middle" class="doodle-text" font-size="14" font-weight="900" fill="#2E6B38">80% ~ 90%</text>
+            </svg>
+          </div>
+
+          <div class="hero-center-cards">
+            <div class="point-card">
+              <div class="point-number">1</div>
+              <div class="point-text">
+                <div class="point-title">聲音無法直接套用 ZIP</div>
+                <div class="point-desc">音訊波形充滿隨機起伏，無法單靠傳統資料演算法高倍瘦身；心理聲學主動剔除被強音掩蓋的微弱資訊。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">2</div>
+              <div class="point-text">
+                <div class="point-title">條件性察覺差異</div>
+                <div class="point-desc">日常環境與一般耳機下難以察覺損失；但在嚴苛鑑賞器材或極端樂段下，受過訓練的聽眾仍可能察覺差異。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/concepts/compression-basics.md" target="_blank" class="source-tag">wiki/compression-basics.md</a>
+            <a href="../raw/02-mdn-digital-audio-concepts.md" target="_blank" class="source-tag">raw/02 MDN</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(5)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】大雷聲與飄落樹葉</strong></p>
+          <p>就像拍照時的大太陽與陰影：大卡車按喇叭時，身旁飄落樹葉的沙沙聲耳朵根本聽不見。既然在吵雜環境中聽不見，有損壓縮就大方地把它刪掉，省下寶貴的儲存空間。</p>
+          <p><strong>【技術要點】</strong>心理聲學（Psychoacoustics）的核心技術包括：切除 20 kHz 以上人耳難辨頻率、利用聽覺遮蔽效應剃除相鄰弱音，以及聯合立體聲（Joint Stereo）合併雙聲道相同資訊。客觀說明在極端器材或訓練有素金耳朵下可能辨識出微小差異，並非絕對無感。</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 6 頁：無損壓縮 (構圖: 左右對稱收納袋) ==================== -->
+      <section class="slide" id="slide-6" data-index="6">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組二：壓縮原理與格式地圖</span>
+              <span class="slide-number-pill">06 / 12</span>
+            </div>
+            <h2 class="slide-title">無損壓縮：完好如初的收納拉鍊</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>無損壓縮就像音樂的拉鍊袋：容量省下一半，拉開時 100% 完美還原原始音質！</span>
+        </div>
+
+        <div class="layout-classic-split">
+          <div class="points-column">
+            <div class="point-card">
+              <div class="point-number">1</div>
+              <div class="point-text">
+                <div class="point-title">100% 可逆還原前提</div>
+                <div class="point-desc">針對相同的未壓縮音訊來源，無損壓縮（如 FLAC、ALAC）解碼後的 PCM 數據與原始母帶位元分毫不差。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">2</div>
+              <div class="point-text">
+                <div class="point-title">顯著節省儲存空間</div>
+                <div class="point-desc">MDN 概念篇（raw/02）描述產出體積約原始未壓縮的 40%～50%；MDN 編碼篇（raw/03）標註體積減少約 40%～50%。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">3</div>
+              <div class="point-text">
+                <div class="point-title">反覆轉檔零失真</div>
+                <div class="point-desc">有損格式多次轉存會累積世代失真，無損格式則永遠原汁原味，是音樂備份與專業後製的不二之選。</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="doodle-hero-container">
+            <svg class="doodle-hero-svg" viewBox="0 0 360 270" fill="none">
+              <!-- 手繪積木拉鍊收納袋 (放大文字) -->
+              <rect x="35" y="45" width="125" height="155" rx="16" fill="#FFFFFF" stroke="#231F20" stroke-width="2.2"/>
+              <rect x="50" y="65" width="40" height="30" fill="#F5DCD5" stroke="#231F20" stroke-width="1.8"/>
+              <rect x="95" y="65" width="50" height="30" fill="#FBF0D9" stroke="#231F20" stroke-width="1.8"/>
+              <rect x="65" y="102" width="70" height="30" fill="#E3EDE4" stroke="#231F20" stroke-width="1.8"/>
+              <text x="97" y="160" text-anchor="middle" class="doodle-text" font-size="14">拉鍊收納袋</text>
+              <text x="97" y="180" text-anchor="middle" class="doodle-text" font-size="13">容量省 40%~50%</text>
+              <!-- 雙向還原箭頭 -->
+              <path d="M175 120 L220 120" stroke="#231F20" stroke-width="3" stroke-linecap="round"/>
+              <path d="M214 114 L222 120 L214 126" fill="#231F20"/>
+              <!-- 右側還原城堡 -->
+              <rect x="230" y="45" width="105" height="155" rx="16" fill="#E3EDE4" stroke="#231F20" stroke-width="2.2"/>
+              <path d="M282 60 L248 95 H316 Z" fill="#F5DCD5" stroke="#231F20" stroke-width="2"/>
+              <rect x="258" y="95" width="48" height="42" fill="#FFFFFF" stroke="#231F20" stroke-width="2"/>
+              <text x="282" y="160" text-anchor="middle" class="doodle-text" font-size="15">100% 還原</text>
+              <text x="282" y="180" text-anchor="middle" class="doodle-text" font-size="13">位元分毫不差</text>
+            </svg>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/comparisons/lossy-vs-lossless.md" target="_blank" class="source-tag">wiki/lossy-vs-lossless.md</a>
+            <a href="../raw/02-mdn-digital-audio-concepts.md" target="_blank" class="source-tag">raw/02 MDN</a>
+            <a href="../raw/03-mdn-audio-codecs.md" target="_blank" class="source-tag">raw/03 MDN</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(6)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】收納袋裡的積木城堡</strong></p>
+          <p>就像把精密的樂高城堡拆成小積木整齊收進袋子裡，雖然體積縮小了，但只要依照說明書拼回去，城堡依然 100% 完好無缺，沒有任何一塊積木受損。</p>
+          <p><strong>【文獻衝突保留】</strong>兩篇 MDN 原文對無損壓縮比例切入角度不同：</p>
+          <ul>
+            <li><code>raw/02</code>（概念篇）：從產出體積切入，指出無損檔案產出大小約為原始未壓縮的 40%～50%。</li>
+            <li><code>raw/03</code>（編碼篇）：從縮減空間切入，標註無損提供約 40%～50% 的體積縮減（Size reduction）。</li>
+          </ul>
+          <p>本簡報忠實並列兩文獻觀點，客觀呈現兩者皆指明無損具備顯著壓縮效益且完全可逆。</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 7 頁：有損格式 MP3 vs AAC (構圖: 左右對決分欄) ==================== -->
+      <section class="slide" id="slide-7" data-index="7">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組二：壓縮原理與格式地圖</span>
+              <span class="slide-number-pill">07 / 12</span>
+            </div>
+            <h2 class="slide-title">常見有損格式大比拼：MP3 vs. AAC</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>MP3 是相容性之王，AAC 則是現代串流的高效能霸主！</span>
+        </div>
+
+        <div class="layout-versus-split">
+          <!-- 左欄：MP3 -->
+          <div class="vs-column">
+            <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-main);">MP3 (經典先驅)</h3>
+            <svg width="120" height="90" viewBox="0 0 120 90" fill="none">
+              <rect x="10" y="10" width="100" height="70" rx="10" fill="#FFFFFF" stroke="#231F20" stroke-width="2"/>
+              <rect x="20" y="20" width="80" height="30" rx="6" fill="#FBF0D9" stroke="#231F20" stroke-width="1.5"/>
+              <circle cx="40" cy="65" r="8" fill="#231F20"/>
+              <circle cx="80" cy="65" r="8" fill="#231F20"/>
+            </svg>
+            <p style="font-size:0.86rem; color:var(--text-body); line-height:1.45;">
+              <strong>相容之王</strong>：專利已全數過期，從古董音響、隨身碟到車用主機幾乎全數支援，無痛相容；320 kbps 為其常見最高位元率上限。
+            </p>
+          </div>
+
+          <div class="vs-badge-center">VS</div>
+
+          <!-- 右欄：AAC -->
+          <div class="vs-column">
+            <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-main);">AAC (現代主力)</h3>
+            <svg width="120" height="90" viewBox="0 0 120 90" fill="none">
+              <rect x="25" y="5" width="70" height="80" rx="12" fill="#FFFFFF" stroke="#231F20" stroke-width="2"/>
+              <rect x="32" y="15" width="56" height="50" rx="6" fill="#E1ECF4" stroke="#231F20" stroke-width="1.5"/>
+              <circle cx="60" cy="74" r="3.5" fill="#231F20"/>
+            </svg>
+            <p style="font-size:0.86rem; color:var(--text-body); line-height:1.45;">
+              <strong>高效主力</strong>：演算法更進步，YouTube 與手機預設首選，同碼率下頻率保留更優秀。
+            </p>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/formats/mp3.md" target="_blank" class="source-tag">wiki/mp3.md</a>
+            <a href="../wiki/formats/aac.md" target="_blank" class="source-tag">wiki/aac.md</a>
+            <a href="../raw/03-mdn-audio-codecs.md" target="_blank" class="source-tag">raw/03 MDN</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(7)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】古董老車 vs 新一代油電車</strong></p>
+          <p>MP3 就像經典古董老車，結構簡單走遍天下；AAC 則是現代新一代油電車，引擎編碼效率更高。兩者都能順利載你抵達音樂的美妙終點。</p>
+          <p><strong>【技術要點】</strong>MDN 載明 AAC 立體聲建議起點為 96 kbps，MP3 則常需 128 kbps 以上。在常見串流碼率下，AAC 展現了比 MP3 更優秀的編碼效率與頻率保留能力；但具體聽感仍受編碼器版本、設定檔與曲目複雜度影響，應作保守客觀之技術理解，不可武斷宣稱 256k AAC 必勝 320k MP3。</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 8 頁：無損格式 FLAC vs ALAC (構圖: 對等雙卡天平) ==================== -->
+      <section class="slide" id="slide-8" data-index="8">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組二：壓縮原理與格式地圖</span>
+              <span class="slide-number-pill">08 / 12</span>
+            </div>
+            <h2 class="slide-title">常見無損格式雙雄：FLAC vs. ALAC</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>來自相同原始音源時，FLAC 與 ALAC 解碼後的聲音位元完全相同，差別在於生態圈與相容性！</span>
+        </div>
+
+        <div class="layout-classic-split">
+          <div class="points-column">
+            <div class="point-card">
+              <div class="point-number">1</div>
+              <div class="point-text">
+                <div class="point-title">開源王者 FLAC</div>
+                <div class="point-desc">非營利組織 Xiph.Org 開發，自由開源無專利、解碼省電，為 PC、Android 與發燒設備主流。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">2</div>
+              <div class="point-text">
+                <div class="point-title">蘋果御用 ALAC</div>
+                <div class="point-desc">Apple 自行研發（現採 Apache 授權），副檔名多為 .m4a，深度無縫整合在 iPhone、Mac 與 Apple Music 生態圈。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">3</div>
+              <div class="point-text">
+                <div class="point-title">解碼還原位元一致</div>
+                <div class="point-desc">同一未壓縮音源經兩者解碼後的 PCM 數據完全相同，主要差別在於軟硬體生態圈與檔案格式相容度。</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="doodle-hero-container">
+            <svg class="doodle-hero-svg" viewBox="0 0 440 260" fill="none">
+              <!-- 左邊 FLAC (加寬卡片，內距充裕) -->
+              <rect x="20" y="20" width="165" height="175" rx="16" fill="#FFFFFF" stroke="#231F20" stroke-width="2.2"/>
+              <ellipse cx="102" cy="68" rx="26" ry="24" fill="#E3EDE4" stroke="#231F20" stroke-width="1.8"/>
+              <text x="102" y="120" text-anchor="middle" class="doodle-text" font-size="15" font-weight="800">FLAC (開源)</text>
+              <text x="102" y="146" text-anchor="middle" class="doodle-text" font-size="13">PC / Android</text>
+              <text x="102" y="168" text-anchor="middle" class="doodle-text" font-size="12" fill="#6B645F">發燒設備主流</text>
+              <!-- 右邊 ALAC (加寬卡片，內距充裕) -->
+              <rect x="255" y="20" width="165" height="175" rx="16" fill="#FFFFFF" stroke="#231F20" stroke-width="2.2"/>
+              <ellipse cx="338" cy="68" rx="24" ry="25" fill="#F5DCD5" stroke="#231F20" stroke-width="1.8"/>
+              <text x="338" y="120" text-anchor="middle" class="doodle-text" font-size="15" font-weight="800">ALAC (蘋果)</text>
+              <text x="338" y="146" text-anchor="middle" class="doodle-text" font-size="13">Apple 生態圈</text>
+              <text x="338" y="168" text-anchor="middle" class="doodle-text" font-size="12" fill="#6B645F">Mac / iPhone 原生</text>
+              <!-- 中間只保留寬敞等號，徹底不擠壓 -->
+              <line x1="202" y1="102" x2="238" y2="102" stroke="#231F20" stroke-width="5" stroke-linecap="round"/>
+              <line x1="202" y1="118" x2="238" y2="118" stroke="#231F20" stroke-width="5" stroke-linecap="round"/>
+              <!-- 說明標籤移至下方置中，文字充足留白不貼邊 -->
+              <rect id="slide8-badge-rect" x="80" y="210" width="280" height="36" rx="10" fill="#FBF0D9" stroke="#231F20" stroke-width="1.5" stroke-dasharray="3 3"/>
+              <text id="slide8-badge-text" x="220" y="233" text-anchor="middle" class="doodle-text" font-size="13" font-weight="800">相同音源，解碼結果一致</text>
+            </svg>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/formats/flac.md" target="_blank" class="source-tag">wiki/flac.md</a>
+            <a href="../wiki/formats/alac.md" target="_blank" class="source-tag">wiki/alac.md</a>
+            <a href="../raw/03-mdn-audio-codecs.md" target="_blank" class="source-tag">raw/03 MDN</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(8)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】不同首飾盒裝同一個金戒指</strong></p>
+          <p>就像同一個純金戒指，裝在黑色天鵝絨盒子（FLAC）或白色皮質盒子（ALAC）裡；盒子外觀與打開方式不同，但裡面的黃金成色 100% 完全相同。</p>
+          <p><strong>【技術要點】</strong>FLAC 是由 Xiph.Org 開發的開放標準（RFC 9639），解碼快速省電；ALAC 則是 Apple 開發（現採 Apache 開源授權）。兩者本質皆為無損壓縮，解碼後資料與原始 PCM 100% 位元完全一致，無音質高下之分，差別在於跨平台相容性與生態整合度。</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 9 頁：實務決策 (構圖: 生活場景雙卡並列) ==================== -->
+      <section class="slide" id="slide-9" data-index="9">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組三：實戰決策與迷思破解</span>
+              <span class="slide-number-pill">09 / 12</span>
+            </div>
+            <h2 class="slide-title">實務決策：日常聽歌，我真的需要「無損」嗎？</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>無損保證的是資料完整，但在吵雜的生活中，優質有損才是最輕鬆的陪伴！</span>
+        </div>
+
+        <div class="layout-versus-split">
+          <!-- 左場景卡：通勤運動 (結構豐富、字體清晰、留白平衡) -->
+          <div class="scenario-card" style="background:#EBF3F9;">
+            <div class="scenario-header">
+              <span class="scenario-badge-pill">日常行動情境</span>
+              <h3 class="scenario-title">🚇 通勤外出與運動</h3>
+              <span class="scenario-format-pill" style="background:#FFFFFF;">首選推薦：高品質有損 (AAC / MP3)</span>
+            </div>
+
+            <div class="scenario-visual-box">
+              <svg width="180" height="75" viewBox="0 0 180 75" fill="none">
+                <!-- 手機播歌 -->
+                <rect x="25" y="8" width="55" height="60" rx="8" fill="#FFFFFF" stroke="#231F20" stroke-width="2"/>
+                <rect x="33" y="18" width="39" height="34" rx="4" fill="#E1ECF4" stroke="#231F20" stroke-width="1.2"/>
+                <!-- 音波橫條 -->
+                <line x1="38" y1="35" x2="38" y2="44" stroke="#231F20" stroke-width="2" stroke-linecap="round"/>
+                <line x1="45" y1="28" x2="45" y2="44" stroke="#231F20" stroke-width="2" stroke-linecap="round"/>
+                <line x1="52" y1="32" x2="52" y2="44" stroke="#231F20" stroke-width="2" stroke-linecap="round"/>
+                <line x1="59" y1="38" x2="59" y2="44" stroke="#231F20" stroke-width="2" stroke-linecap="round"/>
+                <!-- 藍牙耳機與音符 -->
+                <path d="M110 38 C110 24, 138 24, 138 38 V48" stroke="#231F20" stroke-width="2.5" stroke-linecap="round"/>
+                <ellipse cx="108" cy="48" rx="7" ry="9" fill="#FBF0D9" stroke="#231F20" stroke-width="1.8"/>
+                <ellipse cx="140" cy="48" rx="7" ry="9" fill="#FBF0D9" stroke="#231F20" stroke-width="1.8"/>
+                <path d="M152 24 C155 18, 162 20, 160 28" stroke="#231F20" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <div class="scenario-features">
+              <div class="scenario-feature-item">
+                <span class="scenario-feature-icon">⚡</span>
+                <div><strong>省電省流量</strong>：比無損格式節省傳輸流量，減輕行動網路負擔。</div>
+              </div>
+              <div class="scenario-feature-item">
+                <span class="scenario-feature-icon">🎧</span>
+                <div><strong>適應環境噪音</strong>：通勤與戶外等背景噪音吵雜，微弱細節已被自然遮蔽，高品質有損性價比極高。</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="vs-badge-center">⚖️</div>
+
+          <!-- 右場景卡：書房品味 (結構豐富、字體清晰、留白平衡) -->
+          <div class="scenario-card" style="background:#FDF2EE;">
+            <div class="scenario-header">
+              <span class="scenario-badge-pill">定點專注情境</span>
+              <h3 class="scenario-title">🛋️ 書房安靜品味</h3>
+              <span class="scenario-format-pill" style="background:#FFFFFF;">首選推薦：無損格式 (FLAC / ALAC)</span>
+            </div>
+
+            <div class="scenario-visual-box">
+              <svg width="180" height="75" viewBox="0 0 180 75" fill="none">
+                <!-- 檯燈溫暖照明 -->
+                <path d="M30 65 L48 20 M48 20 L68 20" stroke="#231F20" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M58 20 C58 10, 85 10, 85 20 Z" fill="#FBF0D9" stroke="#231F20" stroke-width="2"/>
+                <polygon points="60,22 45,65 95,65 83,22" fill="#FBF0D9" opacity="0.45"/>
+                <!-- 大耳機有線器材 -->
+                <path d="M120 38 C120 20, 154 20, 154 38" stroke="#231F20" stroke-width="3" stroke-linecap="round"/>
+                <rect x="112" y="38" width="14" height="22" rx="6" fill="#E3EDE4" stroke="#231F20" stroke-width="2"/>
+                <rect x="148" y="38" width="14" height="22" rx="6" fill="#E3EDE4" stroke="#231F20" stroke-width="2"/>
+                <path d="M119 60 C119 72, 135 68, 140 72" stroke="#231F20" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <div class="scenario-features">
+              <div class="scenario-feature-item">
+                <span class="scenario-feature-icon">💎</span>
+                <div><strong>位元分毫不差</strong>：夜深人靜環境底噪僅約 30 dB，完整呈現錄音原始動態與殘響空間感。</div>
+              </div>
+              <div class="scenario-feature-item">
+                <span class="scenario-feature-icon">🔌</span>
+                <div><strong>發揮器材潛力</strong>：搭配優質 DAC 與有線耳機聆聽；後製備份強烈建議無損避免世代失真。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/comparisons/lossy-vs-lossless.md" target="_blank" class="source-tag">wiki/lossy-vs-lossless.md</a>
+            <a href="../raw/02-mdn-digital-audio-concepts.md" target="_blank" class="source-tag">raw/02 MDN</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(9)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】慢跑運動鞋 vs 音樂會禮服</strong></p>
+          <p>就像穿運動鞋慢跑（有損壓縮輕巧靈活），和穿訂製皮鞋出席音樂會（無損音訊講究極致）；適合當下生活場景的選擇，就是最好的選擇。</p>
+          <p><strong>【技術要點】</strong>格式選擇應回歸生活應用場景，無損保證數位資料 100% 完整，但並不代表在所有環境下都能帶來可聽辨的音質飛躍。在行動串流或外界噪音干擾下，高品質有損是兼顧流量與良好體驗的務實解。專業音訊後製創作則強烈建議維持無損格式，避免多重轉檔累積世代失真。</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 10 頁：規格迷思 (構圖: 橫向電平空間圖解) ==================== -->
+      <section class="slide" id="slide-10" data-index="10">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組三：實戰決策與迷思破解</span>
+              <span class="slide-number-pill">10 / 12</span>
+            </div>
+            <h2 class="slide-title">破解迷思：追求 Hi-Res 24-bit / 192 kHz，真的有神效嗎？</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>取樣率超出可聽極限效益極微，24-bit 的關鍵在於提供超低底噪，讓錄音製作能安心預留充足的 Headroom（動態餘裕）！</span>
+        </div>
+
+        <div class="layout-hero-center">
+          <div class="hero-center-visual" style="height:140px;">
+            <svg class="doodle-hero-svg" viewBox="0 0 560 135" fill="none">
+              <!-- 0 dBFS 天花板上限 -->
+              <line x1="30" y1="28" x2="530" y2="28" stroke="#D9534F" stroke-width="3" stroke-linecap="round"/>
+              <text x="280" y="20" text-anchor="middle" class="doodle-text" font-size="13.5" font-weight="800" fill="#D9534F">0 dBFS 數位電平上限（超過必然會產生 Clipping 削波破音！）</text>
+              <!-- Headroom 安全緩衝區 -->
+              <rect x="50" y="38" width="460" height="42" rx="8" fill="#FBF0D9" stroke="#231F20" stroke-width="1.6" stroke-dasharray="4 4"/>
+              <text x="280" y="58" text-anchor="middle" class="doodle-text" font-size="13.5" font-weight="800">安全緩衝區：Headroom 動態餘裕 (通常預留 12~18 dB)</text>
+              <text x="280" y="73" text-anchor="middle" class="doodle-text" font-size="12" fill="#6B645F">錄音師刻意降低平均電平，避免突然強奏撞上 0 dBFS 天花板</text>
+              <!-- 24-bit 底噪區 -->
+              <rect x="50" y="86" width="460" height="42" rx="8" fill="#E3EDE4" stroke="#231F20" stroke-width="1.6"/>
+              <text x="280" y="105" text-anchor="middle" class="doodle-text" font-size="13.5" font-weight="800">24-bit 超低底噪（-144 dBFS）提供容納餘裕的底氣</text>
+              <text x="280" y="120" text-anchor="middle" class="doodle-text" font-size="12" fill="#2E6B38">底噪深不見底，降電平錄製也不怕弱音雜訊；16-bit 則已足敷日常播放</text>
+            </svg>
+          </div>
+
+          <div class="hero-center-cards">
+            <div class="point-card">
+              <div class="point-number">1</div>
+              <div class="point-text">
+                <div class="point-title">取樣率不是階梯鋸齒</div>
+                <div class="point-desc">DAC 經重組濾波後輸出平滑連續波形；44.1/48 kHz 取樣已完全涵蓋人耳可聽極限（20 kHz），播放端盲聽難以察覺更高取樣差異。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">2</div>
+              <div class="point-text">
+                <div class="point-title">24-bit 與 Headroom 的真實關係</div>
+                <div class="point-desc">24-bit 擁有 -144 dBFS 極低底噪，讓錄音師能安心調低電平錄製以預留 Headroom；但 0 dBFS 仍是數位固定上限，超量依然會削波破音。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/myths/higher-sample-rate-and-bit-depth.md" target="_blank" class="source-tag">wiki/higher-sample-rate.md</a>
+            <a href="../raw/01-izotope-digital-audio-basics.md" target="_blank" class="source-tag">raw/01 iZotope</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(10)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】挑高大客廳與排球扣殺</strong></p>
+          <p>24-bit 就像挑高 4 米的大客廳（充足的 Headroom），讓打排球的人跳起來不容易撞到天花板（0 dBFS Clipping）；但如果在客廳裡只是安靜坐著看電視（一般播放），一般高度的房間就已經綽綽有餘。</p>
+          <p><strong>【技術要點】</strong>24-bit 提供高達 144 dB 動態範圍（數位底噪 -144 dBFS）。必須釐清：24-bit 本身無法神奇防止破音（任何訊號超過 0 dBFS 固定點上限依然會 Clipping 削波）；24-bit 的真正價值在於「讓 Headroom 的保留成為可能」——因為底噪極低，錄音師能安心將平均錄音電平設在 -18 dBFS 或 -12 dBFS，預留充裕的 Headroom 吸收意外峰值，而不必擔心微弱細節被量化雜音淹沒。對於消費端日常播放，16-bit 的 96 dB 動態範圍已完全超越舒適聆聽環境需求。</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 11 頁：藍牙與設備限制 (構圖: 橫向傳輸管線) ==================== -->
+      <section class="slide" id="slide-11" data-index="11">
+        <header class="slide-header">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組三：實戰決策與迷思破解</span>
+              <span class="slide-number-pill">11 / 12</span>
+            </div>
+            <h2 class="slide-title">迷思破解：戴 AirPods 聽無損，為什麼聽起來沒差？</h2>
+          </div>
+        </header>
+
+        <div class="golden-hook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>Apple 官方指出藍牙連線非無損：手機播的是無損，耳機收到的是有損轉碼！</span>
+        </div>
+
+        <div class="layout-pipeline-flow">
+          <!-- 橫向流程圖解 -->
+          <div class="pipeline-visual-box">
+            <svg class="doodle-hero-svg" viewBox="0 0 540 120" fill="none">
+              <!-- 手機端 -->
+              <rect x="20" y="25" width="75" height="70" rx="10" fill="#FFFFFF" stroke="#231F20" stroke-width="2"/>
+              <text x="57" y="55" text-anchor="middle" class="doodle-text" font-size="14">手機串流</text>
+              <text x="57" y="75" text-anchor="middle" class="doodle-text" font-size="12">無損 ALAC</text>
+              <!-- 藍牙吊橋 -->
+              <path d="M105 60 Q175 75, 245 60" stroke="#231F20" stroke-width="2.5" stroke-dasharray="4 4"/>
+              <text x="175" y="45" text-anchor="middle" class="doodle-text" font-size="14">常規標準藍牙傳輸</text>
+              <text x="175" y="90" text-anchor="middle" class="doodle-text" font-size="12">(有損 AAC 轉碼)</text>
+              <!-- 耳機端 -->
+              <rect x="255" y="25" width="75" height="70" rx="10" fill="#FFFFFF" stroke="#231F20" stroke-width="2"/>
+              <text x="292" y="55" text-anchor="middle" class="doodle-text" font-size="14">AirPods</text>
+              <text x="292" y="75" text-anchor="middle" class="doodle-text" font-size="12">有損解碼</text>
+              <!-- 外接 DAC 捷徑 -->
+              <rect x="365" y="25" width="155" height="70" rx="10" fill="#E3EDE4" stroke="#231F20" stroke-width="2"/>
+              <text x="442" y="55" text-anchor="middle" class="doodle-text" font-size="14">外接 DAC ＋ 有線</text>
+              <text x="442" y="75" text-anchor="middle" class="doodle-text" font-size="12">真正解鎖高解析無損</text>
+            </svg>
+          </div>
+
+          <!-- 下方 3 點並列說明 -->
+          <div class="pipeline-points-row">
+            <div class="point-card">
+              <div class="point-number">1</div>
+              <div class="point-text">
+                <div class="point-title">標準藍牙頻寬限制</div>
+                <div class="point-desc">Apple 官方支援文件指出「Bluetooth connections aren't lossless」，現行標準藍牙協定無法傳輸無損。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">2</div>
+              <div class="point-text">
+                <div class="point-title">AirPods 走 AAC 轉碼</div>
+                <div class="point-desc">iPhone 即使串流 ALAC 無損歌曲，傳送到 AirPods 或 Beats 時均會轉為有損 Apple AAC 壓縮傳輸。</div>
+              </div>
+            </div>
+            <div class="point-card">
+              <div class="point-number">3</div>
+              <div class="point-text">
+                <div class="point-title">硬體門檻與例外</div>
+                <div class="point-desc">高於 48 kHz 需外接 DAC；例外為 AirPods Max (USB-C) 有線模式或 Vision Pro 專有超低延遲協定。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="slide-footer">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/comparisons/apple-music-lossless.md" target="_blank" class="source-tag">wiki/apple-music-lossless.md</a>
+            <a href="../raw/05-apple-lossless-audio.md" target="_blank" class="source-tag">raw/05 Apple</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(11)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】現採柳橙與快遞濃縮汁</strong></p>
+          <p>就像從果園寄送一整箱現採新鮮柳橙（無損檔案），快遞包裹因為限重，在轉運站先把柳橙榨成果汁濃縮包（藍牙 AAC 轉碼）送上門；喝起來依舊香甜，但已不是最初那顆完整的柳橙。</p>
+          <p><strong>【官方技術規格】</strong>Apple 官方指明「Bluetooth connections aren't lossless」。iPhone 本身支援播放最高 48 kHz 音訊，要聆聽高於 48 kHz 的 Hi-Res Lossless 必須外接 DAC。特殊例外包括 AirPods Max (USB-C) 透過原廠線支援有線無損，以及 Vision Pro 搭配支援耳機透過其專有超低延遲無線協定傳輸。</p>
+        </aside>
+      </section>
+
+      <!-- ==================== 第 12 頁：獨立收尾總結版型 (構圖: 專屬總結版型) ==================== -->
+      <section class="slide summary-slide" id="slide-12" data-index="12">
+        <header class="slide-header" style="width:100%;">
+          <div class="header-left">
+            <div class="badge-group">
+              <span class="module-badge">模組四：全篇總結與核心回歸</span>
+              <span class="slide-number-pill">12 / 12</span>
+            </div>
+            <h2 class="slide-title">總結：找回聽音樂的感動（影響音質的三大核心平衡）</h2>
+          </div>
+        </header>
+
+        <!-- 置中大字核心結論看板 -->
+        <div class="summary-conclusion-box">
+          <div class="summary-conclusion-text">
+            ✨ 音質是整體的平衡藝術：把熱情留給動人的旋律，而不是糾結規格數字！
+          </div>
+        </div>
+
+        <!-- 中央三合一平衡天平手繪主視覺 -->
+        <div style="width:100%; max-width:620px; height:110px; display:flex; align-items:center; justify-content:center;">
+          <svg class="doodle-hero-svg" viewBox="0 0 500 125" fill="none">
+            <!-- 天平托盤 -->
+            <path d="M50 85 H450" stroke="#231F20" stroke-width="3" stroke-linecap="round"/>
+            <path d="M250 85 V125 M220 125 H280" stroke="#231F20" stroke-width="3" stroke-linecap="round"/>
+            <!-- 托盤上發光愛心 -->
+            <path d="M250 45 C250 25, 220 25, 220 45 C220 65, 250 80, 250 80 C250 80, 280 65, 280 45 C280 25, 250 25, 250 45 Z" fill="#F5DCD5" stroke="#231F20" stroke-width="2.2"/>
+            <text x="250" y="20" text-anchor="middle" class="doodle-text" font-size="15">純粹感動的音樂共鳴</text>
+          </svg>
+        </div>
+
+        <!-- 下方三大核心並列卡片 (母帶、耳機、格式) -->
+        <div class="summary-triad-container">
+          <div class="summary-triad-card">
+            <div class="triad-icon-box" style="background:#F5DCD5;">🎛️</div>
+            <div class="triad-title">母帶製作 (Mastering)</div>
+            <div class="triad-desc">錄音與混音工藝是音質的靈魂起點；母帶動態不佳，再高規格也救不回。</div>
+          </div>
+          <div class="summary-triad-card">
+            <div class="triad-icon-box" style="background:#E1ECF4;">🎧</div>
+            <div class="triad-title">耳機器材 (Transducers)</div>
+            <div class="triad-desc">耳機與揚聲器的發聲單元與調音風格，直接塑造耳邊最真實的聽感。</div>
+          </div>
+          <div class="summary-triad-card">
+            <div class="triad-icon-box" style="background:#E3EDE4;">📦</div>
+            <div class="triad-title">格式編碼 (Codecs)</div>
+            <div class="triad-desc">主流高品質格式已足夠優秀；三大環節並列平衡，不需為數字焦慮。</div>
+          </div>
+        </div>
+
+        <footer class="slide-footer" style="width:100%;">
+          <div class="source-links">
+            真實來源：
+            <a href="../wiki/myths/higher-sample-rate-and-bit-depth.md" target="_blank" class="source-tag">wiki/higher-sample-rate.md</a>
+            <a href="../raw/01-izotope-digital-audio-basics.md" target="_blank" class="source-tag">raw/01 iZotope</a>
+            <a href="../raw/02-mdn-digital-audio-concepts.md" target="_blank" class="source-tag">raw/02 MDN</a>
+          </div>
+          <button class="notes-btn" onclick="showNotes(12)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            講稿備註
+          </button>
+        </footer>
+
+        <aside class="speaker-notes" style="display:none;">
+          <p><strong>【生活類比】頂級料理的三部曲</strong></p>
+          <p>就像品嚐一道頂級牛排：頂級食材（母帶 Mastering）＋ 廚師高超廚藝與餐盤（耳機器材 Transducers）＋ 乾淨的保鮮外帶盒（格式 Codecs）。缺一不可，但食材與廚藝永遠是靈魂核心。</p>
+          <p><strong>【結語回歸】</strong>數位音訊技術是為了忠實傳遞音樂創作者的情感。理解了取樣率、位元深度與格式之後，更重要的是放鬆心情，戴上喜歡的耳機，享受音樂帶給你的純粹感動！</p>
+        </aside>
+      </section>
+
+    </article>
+  </main>
+
+  <!-- ==================== 浮動控制列 ==================== -->
+  <nav id="controls-bar">
+    <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      上一頁
+    </button>
+
+    <div class="slide-counter">
+      <span id="current-slide-num">01</span> / 12
+    </div>
+
+    <div class="dots-container" id="dots-container">
+      <!-- 由 JS 動態生成 12 個 dot -->
+    </div>
+
+    <button class="nav-btn" id="next-btn" onclick="nextSlide()">
+      下一頁
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+    <button class="icon-btn" id="toggle-notes-btn" onclick="toggleCurrentNotes()" title="講稿備註 (S)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </button>
+
+    <button class="icon-btn" id="fullscreen-btn" onclick="toggleFullscreen()" title="全螢幕切換 (F)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    </button>
+  </nav>
+
+  <!-- ==================== 補充講稿抽屜彈窗 ==================== -->
+  <div id="notes-drawer-overlay" onclick="closeNotesOverlay(event)">
+    <div id="notes-modal">
+      <div class="notes-modal-header">
+        <div class="notes-modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#231F20" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span id="notes-modal-slide-title">補充講稿與延伸背景</span>
+        </div>
+        <button class="notes-close-btn" onclick="closeNotes()">✕</button>
+      </div>
+      <div id="notes-modal-body">
+        <!-- 動態帶入當前頁的講稿內容 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       9. 互動邏輯腳本
+       ========================================================================== -->
+  <script>
+    (function() {
+      const TOTAL_SLIDES = 12;
+      let currentIndex = 1;
+
+      const slides = document.querySelectorAll('.slide');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const counterEl = document.getElementById('current-slide-num');
+      const progressBar = document.getElementById('progress-bar');
+      const dotsContainer = document.getElementById('dots-container');
+      const notesOverlay = document.getElementById('notes-drawer-overlay');
+      const notesModalBody = document.getElementById('notes-modal-body');
+      const notesModalTitle = document.getElementById('notes-modal-slide-title');
+
+      // 初始化 12 個導航點
+      dotsContainer.innerHTML = '';
+      for (let i = 1; i <= TOTAL_SLIDES; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 1 ? ' active' : '');
+        dot.setAttribute('data-target', i);
+        dot.title = '第 ' + i + ' 頁';
+        dot.addEventListener('click', () => goToSlide(i));
+        dotsContainer.appendChild(dot);
+      }
+
+      function updateSlide(index) {
+        if (index < 1) index = 1;
+        if (index > TOTAL_SLIDES) index = TOTAL_SLIDES;
+        currentIndex = index;
+
+        slides.forEach((slide, i) => {
+          if (i + 1 === currentIndex) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        });
+
+        // 格式化數字 01, 02 ...
+        const formatted = currentIndex < 10 ? '0' + currentIndex : '' + currentIndex;
+        counterEl.textContent = formatted;
+
+        // 進度條
+        const progressPct = ((currentIndex) / TOTAL_SLIDES) * 100;
+        progressBar.style.width = progressPct + '%';
+
+        // 按鈕狀態
+        prevBtn.disabled = (currentIndex === 1);
+        nextBtn.disabled = (currentIndex === TOTAL_SLIDES);
+
+        // 導航點狀態
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, i) => {
+          if (i + 1 === currentIndex) dot.classList.add('active');
+          else dot.classList.remove('active');
+        });
+
+        // 同步 URL hash
+        window.location.hash = '#slide-' + currentIndex;
+      }
+
+      window.goToSlide = function(i) {
+        updateSlide(i);
+      };
+
+      window.nextSlide = function() {
+        if (currentIndex < TOTAL_SLIDES) {
+          updateSlide(currentIndex + 1);
+        }
+      };
+
+      window.prevSlide = function() {
+        if (currentIndex > 1) {
+          updateSlide(currentIndex - 1);
+        }
+      };
+
+      window.showNotes = function(index) {
+        const slide = document.getElementById('slide-' + index);
+        if (!slide) return;
+        const notesEl = slide.querySelector('.speaker-notes');
+        const titleEl = slide.querySelector('.slide-title');
+        notesModalTitle.textContent = '第 ' + index + ' 頁講稿備註：' + (titleEl ? titleEl.textContent.trim() : '');
+        notesModalBody.innerHTML = notesEl ? notesEl.innerHTML : '<p>無特殊備註。</p>';
+        notesOverlay.classList.add('open');
+      };
+
+      window.toggleCurrentNotes = function() {
+        if (notesOverlay.classList.contains('open')) {
+          closeNotes();
+        } else {
+          showNotes(currentIndex);
+        }
+      };
+
+      window.closeNotes = function() {
+        notesOverlay.classList.remove('open');
+      };
+
+      window.closeNotesOverlay = function(e) {
+        if (e.target === notesOverlay) {
+          closeNotes();
+        }
+      };
+
+      window.toggleFullscreen = function() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {});
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        }
+      };
+
+      // 鍵盤導航監聽
+      window.addEventListener('keydown', function(e) {
+        if (notesOverlay.classList.contains('open')) {
+          if (e.key === 'Escape') closeNotes();
+          return;
+        }
+
+        switch (e.key) {
+          case 'ArrowRight':
+          case ' ':
+          case 'PageDown':
+            nextSlide();
+            break;
+          case 'ArrowLeft':
+          case 'PageUp':
+            prevSlide();
+            break;
+          case 'Home':
+            goToSlide(1);
+            break;
+          case 'End':
+            goToSlide(TOTAL_SLIDES);
+            break;
+          case 'f':
+          case 'F':
+            toggleFullscreen();
+            break;
+          case 's':
+          case 'S':
+          case 'n':
+          case 'N':
+            toggleCurrentNotes();
+            break;
+        }
+      });
+
+      // 檢查 URL Hash 跳轉
+      if (window.location.hash) {
+        const match = window.location.hash.match(/#slide-(\d+)/);
+        if (match && match[1]) {
+          const target = parseInt(match[1], 10);
+          if (target >= 1 && target <= TOTAL_SLIDES) {
+            updateSlide(target);
+          }
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

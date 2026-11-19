@@ -1,0 +1,256 @@
+{
+  "project": "Digital Audio & Sound Quality HTML Presentation",
+  "version": "2.0",
+  "style": "Warm Cream & Minimalist Hand-drawn Ink Doodle",
+  "total_slides": 12,
+  "evidence_cards": [
+    {
+      "slide_id": 1,
+      "title": "獨立封面：我們每天聽的數位音樂，到底是什麼？",
+      "claims": [
+        "自然界的聲音是空氣分子震動產生的連續類比訊號（聲波電壓）。",
+        "電腦無法直接儲存無限連續的模擬波形，必須透過 A/D 轉換（ADC）轉化為離散二進位數字序列以供儲存、處理與播放。",
+        "數位音訊的基本骨架由時間軸的取樣（每秒量測次數，Sample Rate）與振幅軸的量化（音量電壓對應數值，Bit Depth）共同構成。"
+      ],
+      "wiki_sources": [
+        "wiki/concepts/sample-rate.md#概念說明",
+        "wiki/concepts/bit-depth.md#概念說明"
+      ],
+      "raw_sources": [
+        "raw/01-izotope-digital-audio-basics.md 段落「What is digital audio?」",
+        "raw/02-mdn-digital-audio-concepts.md 段落「The sound wave」、「Sampling audio」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "無衝突",
+      "visual_plan": "溫暖米白背景 ＋ 簡約黑白手繪 Doodle：中央大幅圓潤手繪黑膠唱片、頭戴式耳機與飛舞音符，極致呼吸留白，純粹文青封面質感。"
+    },
+    {
+      "slide_id": 2,
+      "title": "取樣率（Sample Rate）：電腦每秒對聲音「拍幾次照」？",
+      "claims": [
+        "取樣率是每秒對連續類比訊號測量電壓的次數，單位為 Hz 或 kHz。",
+        "奈奎斯特–夏農取樣定理指出：在訊號帶寬受限並配合理想重組濾波前提下，理論最高可記錄頻率為取樣率的一半（f_max = 取樣率 / 2，即奈奎斯特頻率）。",
+        "人耳正常聽覺上限約為 20 kHz，因此理論上取樣率需達到 40 kHz 以上才能覆蓋可聽頻率。",
+        "現實低通濾波器需要過渡頻帶（Transition Band）緩衝以避免混疊失真（Aliasing）：CD 44.1 kHz 預留約 2.05 kHz 緩衝（上限 22.05 kHz）；常見影音規格 48 kHz 預留 4 kHz 緩衝（上限 24 kHz）。",
+        "取樣率決定的是能忠實還原的最高聲音頻率，而非波形在時間軸上的階梯平滑度。"
+      ],
+      "wiki_sources": [
+        "wiki/concepts/sample-rate.md#重點整理",
+        "wiki/myths/higher-sample-rate-and-bit-depth.md#迷思一：取樣率越高，波形越平滑、鋸齒越少？"
+      ],
+      "raw_sources": [
+        "raw/01-izotope-digital-audio-basics.md 段落「What is an audio sample rate?」、「Selecting an audio sample rate」、「Sample rates and aliasing」",
+        "raw/02-mdn-digital-audio-concepts.md 段落「Sampling audio」、「Sample rates」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "無衝突",
+      "visual_plan": "黑白手繪 Doodle：手繪連拍相機與手繪頻率尺規，直觀標示 20 Hz～20 kHz 人耳極限與 44.1 kHz / 48 kHz 濾波過渡緩衝空間。"
+    },
+    {
+      "slide_id": 3,
+      "title": "位元深度（Bit Depth）：量測音量大小的「尺」有多精細？",
+      "claims": [
+        "量化（Quantization）將量測到的類比電壓數值四捨五入至最近的離散階梯。",
+        "固定點位元深度 X 決定了振幅階梯數（2^X）：16-bit 擁有 65,536 階，24-bit 擁有 1,677 萬階。",
+        "位元深度決定了數位系統內部的量化底噪與動態範圍（約 6.02 dB/bit）：16-bit 提供約 96 dB 動態範圍（底噪約 -96.3 dBFS）；24-bit 提供約 144 dB（底噪約 -144.5 dBFS）。",
+        "在數位音訊處理或位元深度轉換時，實務常視需求加入抖動（Dither）以消除量化失真；經 DAC 濾波重組後輸出平滑波形，輸出波形本身不存在階梯鋸齒。",
+        "16-bit 提供的 96 dB 內部動態範圍已能容納極寬廣的音量對比，在常規播放環境中已相當乾淨。（不直接與環境噪音 dB SPL 混淆比較）。"
+      ],
+      "wiki_sources": [
+        "wiki/concepts/bit-depth.md#重點整理",
+        "wiki/myths/higher-sample-rate-and-bit-depth.md#迷思三：一般人在家聽音樂，能聽出 16-bit 與 24-bit 的差別嗎？"
+      ],
+      "raw_sources": [
+        "raw/01-izotope-digital-audio-basics.md 段落「What is bit depth in audio?」、「Can you hear the difference between audio bit depths?」",
+        "raw/02-mdn-digital-audio-concepts.md 段落「Sampling audio (Resolution)」、「Samples」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "無衝突（嚴格區隔 dBFS 系統內部對比與聲壓級 dB SPL）",
+      "visual_plan": "黑白手繪 Doodle：手繪粗尺規（大刻度量化雜音）vs 細尺規（16-bit 96 dB 階梯），標示 0 dBFS 天花板與 -96 dBFS 底噪線。"
+    },
+    {
+      "slide_id": 4,
+      "title": "為什麼音樂需要壓縮？一首歌竟然有 34.5 MB！",
+      "claims": [
+        "未壓縮音訊（如 PCM）完全可以正常播放，但龐大的檔案體積會造成高昂的頻寬消耗與儲存壓力。",
+        "明確計算前提：在立體聲（雙聲道）、16-bit、48 kHz 取樣率標準影音規格下，未壓縮傳輸率為 48,000 * 16 * 2 = 1,536,000 bps = 192 kB/s。",
+        "一首 3 分鐘（180 秒）未壓縮立體聲歌曲的檔案體積計算為：192,000 bytes/s * 180 s = 34,560,000 bytes ≈ 34.56 MB。",
+        "音訊壓縮技術能大幅降低傳輸碼率與檔案容量，有效緩解網路頻寬與行動裝置儲存空間的負擔。"
+      ],
+      "wiki_sources": [
+        "wiki/concepts/bitrate.md#重點整理"
+      ],
+      "raw_sources": [
+        "raw/02-mdn-digital-audio-concepts.md 段落「Audio file size and network bandwidth」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "無衝突（避免使用「所有串流平台都必須壓縮」之絕對語氣，強調壓縮對頻寬與儲存的效益）",
+      "visual_plan": "黑白手繪 Doodle：手繪大水管（34.5 MB 巨大音符）通過手繪壓縮收納漏斗，縮小為串流小水管順暢傳輸。"
+    },
+    {
+      "slide_id": 5,
+      "title": "壓縮的魔法：心理聲學如何把檔案瘦身？",
+      "claims": [
+        "音訊波形充滿隨機微幅波動（Noisy），無法像文字般直接套用通用演算法（如 ZIP）高倍壓縮。",
+        "有損壓縮結合心理聲學（Psychoacoustics）原理，分析人類聽覺盲點來刪減資訊。",
+        "核心技術包含切除人耳難辨的 20 kHz 以上頻率、利用聽覺遮蔽效應（強音響起時剃除被掩蓋的相鄰弱音訊號），以及聯合立體聲（Mid-Side 與 Intensity 聲道優化）。",
+        "有損壓縮通常能讓一般聽眾在日常環境難以察覺音質明顯損失，但在特定嚴苛器材、訓練經驗或極端樂段下仍可能被察覺，並非絕對毫無差別。"
+      ],
+      "wiki_sources": [
+        "wiki/concepts/compression-basics.md#概念說明",
+        "wiki/concepts/compression-basics.md#重點整理"
+      ],
+      "raw_sources": [
+        "raw/02-mdn-digital-audio-concepts.md 段落「Audio compression basics」、「Psychoacoustics 101」、「Joint stereo」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "無衝突（客觀說明多數人難辨但非絕對無感）",
+      "visual_plan": "黑白手繪 Doodle：手繪「大聲音遮蔽傘」— 大雷聲雨傘下，小落葉沙沙聲被遮蔽忽略，放心丟掉不可聽資訊。"
+    },
+    {
+      "slide_id": 6,
+      "title": "有損 vs. 無損：你願意用多少空間換取「原汁原味」？",
+      "claims": [
+        "無損壓縮（Lossless）：純演算法預測打包，解碼後資料與原音 100% 位元完全相同，無反覆轉檔世代失真。",
+        "有損壓縮（Lossy）：永久移除人耳不敏感資訊，具備極高壓縮比，但多次重複轉檔會累積失真（Generational Loss）。",
+        "保留兩篇文獻之不同描述（不合併為同一數據）：MDN 概念篇（raw/02）從成品體積角度指出無損檔案產出大小約為原始未壓縮的 40%～50%；MDN 編碼篇（raw/03）從節省空間角度標註無損提供約 40%～50% 的體積縮減（Size reduction）。兩者各自反映了不同文獻的描述脈絡，完整並列供對照。",
+        "相對地，現代有損壓縮（如 MP3、AAC）能將檔案體積大幅縮減至原始大小的 5%～20%（節省約 80%～95% 空間）。"
+      ],
+      "wiki_sources": [
+        "wiki/comparisons/lossy-vs-lossless.md#核心規格與特徵對比",
+        "wiki/concepts/compression-basics.md#重點整理"
+      ],
+      "raw_sources": [
+        "raw/02-mdn-digital-audio-concepts.md 段落「Audio compression basics」",
+        "raw/03-mdn-audio-codecs.md 段落「Audio encoder configuration effects on quality and size」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "衝突保留：同時並列 MDN raw/02（產出為 40-50%）與 raw/03（體積縮減 40-50%）兩種說法，不合流為單一數字",
+      "visual_plan": "黑白手繪 Doodle：手繪神奇拉鍊收納袋，積木拆解收納，拉開 100% 原樣還原，底部並列兩篇 MDN 文獻描述。"
+    },
+    {
+      "slide_id": 7,
+      "title": "格式家族（有損篇）：MP3 與 AAC 的世代交替",
+      "claims": [
+        "MP3（MPEG-1 Audio Layer III）：近代音訊普及先驅，專利已全數過期，新舊硬體相容普及度極廣；MPEG-1 模式支援最高 320 kbps。",
+        "AAC（Advanced Audio Coding）：MPEG-4 Part 3 / MPEG-2 Part 7 標準，設計目標是在比 MP3 更高的壓縮率下提供更好的音訊保真度（MDN 載明立體聲建議起點為 96 kbps，MP3 則常需 128 kbps 以上）。",
+        "編碼效率與客觀表現：在常見串流碼率下，AAC 展現了比 MP3 更優秀的編碼效率與頻率保留能力；但具體聽感表現仍受編碼器版本、設定檔與曲目複雜度影響，應作保守客觀之技術理解，而非無條件絕對勝負。",
+        "AAC 廣泛應用於 YouTube、行動裝置串流與 Apple 設備預設音訊。"
+      ],
+      "wiki_sources": [
+        "wiki/formats/mp3.md#重點整理",
+        "wiki/formats/aac.md#重點整理"
+      ],
+      "raw_sources": [
+        "raw/03-mdn-audio-codecs.md 段落「MP3 (MPEG-1 Audio Layer III)」、「AAC (Advanced Audio Coding)」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "保守表述：不使用無直接 raw 證實之「256k AAC 必勝 320k MP3」，忠實依 MDN 載明之編碼設計目標與建議碼率說明",
+      "visual_plan": "黑白手繪 Doodle：手繪復古 MP3 隨身聽與經典錄音帶 vs 現代串流智慧手機（AAC 現代高編碼效率），生活化對照。"
+    },
+    {
+      "slide_id": 8,
+      "title": "格式家族（無損篇）：FLAC 與 ALAC 的開放與生態系",
+      "claims": [
+        "FLAC（Free Lossless Audio Codec）：Xiph.Org 開發，開源無專利（RFC 9639），解碼快速省電，為開放網頁、PC、Android 與獨立發燒播放硬體之主流。",
+        "ALAC（Apple Lossless Audio Codec）：Apple 研發之無損格式（現採 Apache 開源授權），副檔名多為 .m4a，深度整合於 iOS、macOS 與 Apple Music。",
+        "兩者本質皆為無損壓縮，解碼還原後與原始 PCM 100% 位元完全相同，無音質高下之分，差別在於跨平台相容性與生態系整合度。"
+      ],
+      "wiki_sources": [
+        "wiki/formats/flac.md#概念說明",
+        "wiki/formats/alac.md#概念說明"
+      ],
+      "raw_sources": [
+        "raw/03-mdn-audio-codecs.md 段落「FLAC (Free Lossless Audio Codec)」、「ALAC (Apple Lossless Audio Codec)」",
+        "raw/04-xiph-flac.md 段落「What is FLAC?」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "無衝突",
+      "visual_plan": "黑白手繪 Doodle：手繪開源宇宙（PC/Android）vs 蘋果生態宇宙（iPhone/Mac），中央手繪大等號「＝」（解碼音質 100% 完全相同）。"
+    },
+    {
+      "slide_id": 9,
+      "title": "實戰決策：日常生活中，我該選「有損」還是「無損」？",
+      "claims": [
+        "格式選擇應回歸生活應用場景，無損保證數位資料 100% 完整，但並不代表在所有環境下都能帶來可聽辨的音質飛躍。",
+        "行動串流與通勤運動：有外界噪音干擾且搭配一般藍牙設備時，高品質有損（如 256k AAC / 320k MP3）是兼顧頻寬流量、裝置容量與良好聽感的務實選擇。",
+        "安靜專注聆聽：在安靜環境下使用優良有線耳機或音響時，選擇無損（FLAC/ALAC）可確保數位資料「位元分毫不差（Bit-for-bit）」真實還原，但是否能察查差異仍取決於個人聽力與設備解析力。",
+        "音樂後製創作：建議維持無損格式（FLAC/ALAC/PCM），避免反覆轉檔導致世代失真累積（Generational Loss）。"
+      ],
+      "wiki_sources": [
+        "wiki/comparisons/lossy-vs-lossless.md#決策指南與適用情境"
+      ],
+      "raw_sources": [
+        "raw/02-mdn-digital-audio-concepts.md 段落「Audio compression basics (Use cases)」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "無衝突（實務建議而非絕對音質保證）",
+      "visual_plan": "黑白手繪 Doodle：手繪生活天平對比：左側捷運通勤戴耳機（輕巧順暢 AAC）vs 右側寧靜書房細品音樂（無損真品味）。"
+    },
+    {
+      "slide_id": 10,
+      "title": "迷思一：追求 Hi-Res 24-bit / 192 kHz，真的有神話般的提升嗎？",
+      "claims": [
+        "取樣率真相：DAC 搭配低通重建濾波器輸出平滑類比波形，實際聲音中不存在階梯鋸齒。人耳極限約 20 kHz，44.1/48 kHz 取樣率已能涵蓋可聽頻率；高取樣率主要提供濾波緩衝，與防止破音無關。",
+        "192 kHz 的量測挑戰：取樣週期縮短至僅 5.4 微秒，電壓量測時間極短容易增加硬體量測誤差（iZotope 引 Dan Lavry），超高取樣率並非越高越好。",
+        "位元深度真相：24-bit 提供高達 144 dB 動態範圍（底噪 -144.5 dBFS）。24-bit 本身無法直接防止破音（訊號若超過 0 dBFS 依然會產生 Clipping 破音）；但極低底噪允許錄音師刻意降低錄音電平，留出充足的「動態安全餘裕（Headroom）」，從而降低意外爆音導致破音的風險。在一般播放端，16-bit 提供的 96 dB 動態範圍已足夠應付日常安靜環境。"
+      ],
+      "wiki_sources": [
+        "wiki/myths/higher-sample-rate-and-bit-depth.md#核心迷思破解",
+        "wiki/concepts/sample-rate.md#重點整理",
+        "wiki/concepts/bit-depth.md#重點整理"
+      ],
+      "raw_sources": [
+        "raw/01-izotope-digital-audio-basics.md 段落「Sample rate, bit depth, and audio “resolution”」、「176.4 vs. 192 kHz」、「Can you hear the difference between audio bit depths?」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "無衝突（嚴格區分取樣率濾波與位元深度 Headroom 職責，明確澄清 24-bit 無法直接免除破音）",
+      "visual_plan": "黑白手繪 Doodle：手繪電平天花板（0 dBFS 破音警示標誌）與手繪安全帽（24-bit 錄音寬敞 Headroom 安全餘裕緩衝）。"
+    },
+    {
+      "slide_id": 11,
+      "title": "迷思二：戴 AirPods 聽 Apple Music 無損，是真的無損嗎？",
+      "claims": [
+        "一般標準藍牙傳輸架構限制：Apple 官方支援文件指出「Bluetooth connections aren't lossless」。受限於現行標準藍牙頻寬與協定，常規藍牙音訊本質皆非無損傳輸。",
+        "Apple 設備搭配常規 AirPods 情境：Apple Music 串流傳送至 AirPods 或 Beats 無線耳機時採用有損之 Apple AAC 藍牙轉碼。",
+        "特殊連線例外：AirPods Max（USB-C 版）以官方 USB-C 對 USB-C 連接線連接時支援有線無損；Apple Vision Pro 搭配支援耳機（AirPods 4、AirPods Pro 2 USB-C 版等）可透過其獨家超低延遲專有無線協定傳輸無損（非一般標準藍牙連線）。",
+        "硬體播放門檻（嚴格依 raw/05 官方文獻）：官方將無損劃分為 Lossless 與 Hi-Res Lossless；播放高於 48 kHz 音訊時，iPhone、iPad、PC 與多數 Mac 明確要求外接 DAC；14/16 吋 MacBook Pro 原生支援至 96 kHz；Apple TV 4K 需接 HDMI AV 擴大機。",
+        "補充標記說明：Apple 官方說明文件僅使用「高於 48 kHz 的歌曲」與「Hi-Res Lossless」，未在文中直接標出「24-bit / 192 kHz」文字數據，此處客觀依官方文獻標示保留。"
+      ],
+      "wiki_sources": [
+        "wiki/comparisons/apple-music-lossless.md#重點整理：各設備播放條件與硬體限制",
+        "wiki/formats/alac.md#重點整理",
+        "wiki/formats/aac.md#重點整理"
+      ],
+      "raw_sources": [
+        "raw/05-apple-lossless-audio.md 段落「What you need to know about lossless in Apple Music」、「About lossless audio with Apple and Beats headphones」、「How to listen to lossless on your iPhone or iPad」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "標註 24/192 為補充說明 / 待進一步文件確認；明確界定藍牙限制與專有無線協定例外之區隔",
+      "visual_plan": "黑白手繪 Doodle：手繪傳輸漏斗鏈：手機無損檔案 $\to$ 藍牙窄橋/有損轉碼 $\to$ 無線耳機（手繪標註 Vision Pro 與 DAC 放大鏡例外）。"
+    },
+    {
+      "slide_id": 12,
+      "title": "總結：找回聽音樂的感動（影響音質的三大核心平衡）",
+      "claims": [
+        "整體聽感由多重因素共同構成，不應單純陷入規格數字的焦慮。",
+        "三大核心維度並列平衡檢視（無固定絕對排名，完全不使用未經證實的百分比）：",
+        "1. 音樂製作與錄音混音水準（Mastering）：音質的訊號起點，決定聲音動態與音色平衡。",
+        "2. 耳機與揚聲器（Transducers）：硬體發聲單元與聲學特性直接塑造耳邊聲音表現。",
+        "3. 編碼格式與位元率（Codecs & Bitrates）：在優良規格下具備高保真度，細微邊際差異受限於前兩者。",
+        "實務心態：依場景與設備理性選擇，把時間與熱情留給優秀的音樂與好耳機。"
+      ],
+      "wiki_sources": [
+        "wiki/myths/higher-sample-rate-and-bit-depth.md#實務應用與總結建議",
+        "wiki/comparisons/lossy-vs-lossless.md#決策指南與適用情境"
+      ],
+      "raw_sources": [
+        "raw/01-izotope-digital-audio-basics.md 段落「Start using sample rate and bit depth more effectively」",
+        "raw/02-mdn-digital-audio-concepts.md 段落「Audio compression basics」"
+      ],
+      "raw_grounding_status": "VERIFIED_STRICT",
+      "conflict_notes": "無衝突（完全刪除未接地百分比）",
+      "visual_plan": "黑白手繪 Doodle：手繪音樂三合一平衡天平（母帶錄音 + 耳機器材 + 格式規格），中央發光溫暖愛心與跳動音符。"
+    }
+  ]
+}

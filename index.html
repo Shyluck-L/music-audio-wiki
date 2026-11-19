@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>數位音樂與音質知識庫 ＆ 12 頁教學簡報</title>
+  <style>
+    :root {
+      --bg-cream: #FAF8F5;
+      --card-bg: #FFFFFF;
+      --card-alt: #F6F3EE;
+      --ink-black: #231F20;
+      --ink-muted: #6B645F;
+      --border-ink: #231F20;
+      --accent-warm: #EAD9C8;
+      --accent-badge: #FBF0D9;
+      --accent-green: #E3EDE4;
+      --accent-pink: #F5DCD5;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--ink-black);
+      font-family: var(--font-family);
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* Hero 區域 */
+    .hero {
+      text-align: center;
+      padding: 3rem 1.5rem 2.5rem;
+      background: var(--card-bg);
+      border: 2px solid var(--border-ink);
+      border-radius: 20px;
+      box-shadow: 4px 5px 0px rgba(35, 31, 32, 0.9);
+      margin-bottom: 2.5rem;
+    }
+
+    .doodle-hero-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.2rem;
+      display: block;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.3rem 0.9rem;
+      background: var(--accent-badge);
+      border: 1.5px solid var(--border-ink);
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--ink-muted);
+      max-width: 680px;
+      margin: 0 auto 1.8rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--ink-black);
+      color: #FAF8F5;
+      text-decoration: none;
+      font-size: 1.15rem;
+      font-weight: 700;
+      padding: 0.85rem 2.2rem;
+      border-radius: 12px;
+      border: 2px solid var(--ink-black);
+      box-shadow: 3px 4px 0px rgba(234, 217, 200, 0.9);
+      transition: all 0.15s ease;
+    }
+
+    .cta-button:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 6px 0px var(--ink-muted);
+      background: #151314;
+    }
+
+    .cta-subtitle {
+      display: block;
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+    }
+
+    /* 區塊標題 */
+    .section-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: var(--ink-black);
+      border-radius: 50%;
+    }
+
+    /* 卡片格線 */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 2px solid var(--border-ink);
+      border-radius: 16px;
+      padding: 1.4rem;
+      box-shadow: 3px 3px 0px rgba(35, 31, 32, 0.85);
+      transition: transform 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border: 1px solid var(--border-ink);
+      border-radius: 6px;
+      background: var(--card-alt);
+    }
+
+    .card p {
+      font-size: 0.92rem;
+      color: var(--ink-muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .card-link {
+      display: inline-block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--ink-black);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .card-link:hover {
+      color: #7A3E26;
+    }
+
+    /* 簡報特色亮點 */
+    .highlights-box {
+      background: var(--card-alt);
+      border: 2px solid var(--border-ink);
+      border-radius: 16px;
+      padding: 1.4rem 1.8rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .highlights-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 0.8rem;
+    }
+
+    .highlights-list li {
+      font-size: 0.92rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .highlights-list li strong {
+      color: var(--ink-black);
+    }
+
+    /* 頁尾 */
+    footer {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 2px dashed rgba(35, 31, 32, 0.3);
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+    }
+
+    footer a {
+      color: var(--ink-black);
+      text-decoration: underline;
+      margin: 0 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1.5rem 1rem;
+      }
+      .hero {
+        padding: 2rem 1rem;
+      }
+      .hero h1 {
+        font-size: 1.7rem;
+      }
+      .cta-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 主視覺 Hero -->
+    <header class="hero">
+      <svg class="doodle-hero-icon" viewBox="0 0 100 100" fill="none" stroke="#231F20" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="50" cy="50" r="42" fill="#FFFFFF"/>
+        <circle cx="50" cy="50" r="16" fill="#F5DCD5"/>
+        <path d="M50 34v-8M50 74v-8M34 50h-8M74 50h-8"/>
+        <path d="M26 26l6 6M68 68l6 6M74 26l-6 6M32 68l-6 6"/>
+      </svg>
+      <div class="badge-pill">Andrej Karpathy LLM Wiki 構想 ✕ 雙層解耦架構</div>
+      <h1>數位音樂與音質：知識庫 ＆ 教學簡報</h1>
+      <p>以嚴格接地的數位音訊權威知識庫為單一事實來源（Single Source of Truth），透過 Graph/Loop 控制器驅動產出的 12 頁黑白手繪 Doodle 風格互動簡報。</p>
+
+      <div>
+        <a href="presentation/index.html" class="cta-button">
+          <span>▶ 開啟 12 頁手繪教學簡報</span>
+        </a>
+        <span class="cta-subtitle">免安裝套件・純原生 HTML5 / CSS / SVG・支援講稿備註與鍵盤導航</span>
+      </div>
+    </header>
+
+    <!-- 簡報三大模組 -->
+    <h2 class="section-title">簡報核心內容架構（共 12 頁）</h2>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">
+          <span>模組一：數位化基礎</span>
+          <span class="card-tag">第 1～4 頁</span>
+        </div>
+        <p>從封面出發，白話解構取樣率（每秒拍照次數）、位元深度（測量尺刻度）與未壓縮 PCM 位元率計算。</p>
+        <a href="presentation/index.html" class="card-link">前往瀏覽封面與基礎概念 →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>模組二：壓縮與格式</span>
+          <span class="card-tag">第 5～8 頁</span>
+        </div>
+        <p>心理聲學聽覺遮蔽瘦身原理、MP3 時代功臣、AAC 串流主力，以及 FLAC 與 ALAC 解碼完全一致的實用比較。</p>
+        <a href="presentation/index.html" class="card-link">前往瀏覽壓縮與格式專頁 →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>模組三：決策與迷思</span>
+          <span class="card-tag">第 9～12 頁</span>
+        </div>
+        <p>日常通勤與書房聆聽決策、Apple Music 與藍牙限制、破解 Hi-Res 鋸齒波迷思，以及 12 頁收斂總結。</p>
+        <a href="presentation/index.html" class="card-link">前往瀏覽決策指南與總結 →</a>
+      </div>
+    </div>
+
+    <!-- 專案工程亮點 -->
+    <div class="highlights-box">
+      <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem;">🛠️ 專案工程與自動化門禁（Quality Gates）</h3>
+      <p style="font-size: 0.92rem; color: var(--ink-muted);">本專案採用嚴謹的 Python 狀態機（workflow.py）嚴格控制製作流程，確保內容絕無幻覺並通過自動化視覺檢驗：</p>
+      <ul class="highlights-list">
+        <li>
+          <span>🏷️</span>
+          <div><strong>Wiki 嚴格接地</strong>：所有數據源自 5 篇權威文獻，嚴禁憑空捏造。</div>
+        </li>
+        <li>
+          <span>🔍</span>
+          <div><strong>Gate 1 結構檢核</strong>：自動驗證證據卡與大綱完整性。</div>
+        </li>
+        <li>
+          <span>📝</span>
+          <div><strong>Gate 2 事實審查</strong>：程式化與 AI 語意雙層審查，無過度肯定或模糊數值。</div>
+        </li>
+        <li>
+          <span>🖥️</span>
+          <div><strong>Gate 3 瀏覽器檢核</strong>：Headless Chrome 驗證三種解析度無溢出、SVG 邊界安全與導航正常。</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Wiki 知識庫分類目錄 -->
+    <h2 class="section-title">數位音訊知識庫導覽（Wiki Pages）</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">
+          <span>核心概念（Concepts）</span>
+          <span class="card-tag">4 篇</span>
+        </div>
+        <p>奠定數位音樂理解的基石，涵蓋取樣定理、動態範圍、位元率與心理聲學。</p>
+        <ul style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.8;">
+          <li><a href="wiki/concepts/sample-rate.md" class="card-link">取樣率（Sampling Rate）</a></li>
+          <li><a href="wiki/concepts/bit-depth.md" class="card-link">位元深度（Bit Depth）</a></li>
+          <li><a href="wiki/concepts/bitrate.md" class="card-link">位元率（Bitrate）與檔案大小</a></li>
+          <li><a href="wiki/concepts/compression-basics.md" class="card-link">音訊壓縮原理與心理聲學</a></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>格式與對比（Formats & Comparisons）</span>
+          <span class="card-tag">6 篇</span>
+        </div>
+        <p>主流音訊編碼深度剖析、生態系相容性與日常生活實戰決策指南。</p>
+        <ul style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.8;">
+          <li><a href="wiki/formats/mp3.md" class="card-link">MP3 編碼技術</a> ｜ <a href="wiki/formats/aac.md" class="card-link">AAC 進階音訊編碼</a></li>
+          <li><a href="wiki/formats/flac.md" class="card-link">FLAC 無損編碼</a> ｜ <a href="wiki/formats/alac.md" class="card-link">ALAC Apple 無損</a></li>
+          <li><a href="wiki/comparisons/lossy-vs-lossless.md" class="card-link">有損 vs 無損壓縮橫向對比</a></li>
+          <li><a href="wiki/comparisons/apple-music-lossless.md" class="card-link">Apple Music 無損與播放設備限制</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 頁尾連結 -->
+    <footer>
+      <p>數位音樂與音質知識庫專案 ｜ 基於純靜態 HTML5 / CSS / SVG 構建</p>
+      <p style="margin-top: 0.4rem;">
+        <a href="presentation/index.html">正式簡報</a> •
+        <a href="README.md">專案 README</a> •
+        <a href="index.md">Wiki 目錄 (index.md)</a> •
+        <a href="AGENTS.md">Agent 維護規範</a> •
+        <a href="log.md">歷程日誌 (log.md)</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

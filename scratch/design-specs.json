@@ -1,0 +1,67 @@
+{
+  "project": "Digital Audio & Sound Quality Presentation",
+  "version": "2.0",
+  "node": "Node 0 (Design Specifications)",
+  "approval_status": "CONFIRMED_V2",
+  "design_philosophy": {
+    "core_aesthetic": "簡潔、溫暖的黑白手繪 Doodle 風格 (Warm Minimalist Hand-drawn Doodle Art)",
+    "tone": "自然圓潤、文青質感、親切可愛、生活大白話、直覺圖解",
+    "negative_rules": "嚴禁科技儀表板、深黑霓虹科技感、密集微型卡片、大量小字與複雜工程推導",
+    "reference_notes": "參考使用者提供之黑白手繪耳機唱片與日常符號插圖風格（自然有機的手繪墨水線條、圓潤轉角、柔和點綴色），融會貫通而不照抄"
+  },
+  "specifications": {
+    "aspect_ratio": "16:9 (1280x720 base viewport, responsive to 1920x1080 and laptop viewports)",
+    "total_slides": 12,
+    "slide_roles": {
+      "slide_1": "獨立封面（Standalone Cover）：大標題、溫暖副標、文青手繪音樂主視覺（黑膠唱片、頭戴耳機、飄動音符）與極致留白",
+      "slides_2_to_11": "核心概念教學頁（Core Concept Slides）：每頁只聚焦一個核心概念，配置一個主要手繪圖解（Hero Doodle Diagram）與最多 2～3 個精簡重點",
+      "slide_12": "總結頁（Summary / Key Takeaways）：收束三大核心平衡（母帶、器材、格式），找回聽音樂的情感初衷"
+    },
+    "color_palette": {
+      "theme": "Warm Cream & Minimalist Ink Doodle",
+      "bg_primary": "#FAF8F5",
+      "bg_card": "rgba(255, 255, 255, 0.85)",
+      "bg_card_border": "rgba(42, 36, 33, 0.12)",
+      "text_primary": "#2A2421",
+      "text_secondary": "#5C534E",
+      "text_muted": "#8C827A",
+      "accent_blush": "#F5DCD5",
+      "accent_terracotta": "#C86D56",
+      "accent_sage": "#7A9E7E",
+      "ink_line": "#231F20"
+    },
+    "typography": {
+      "font_family": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans TC', 'PingFang TC', sans-serif",
+      "title_size": "clamp(1.8rem, 3.0vw, 2.4rem)",
+      "subtitle_size": "clamp(1.1rem, 1.6vw, 1.35rem)",
+      "body_size": "clamp(1.05rem, 1.4vw, 1.25rem)",
+      "line_height": "1.65",
+      "weight_title": "700",
+      "weight_body": "400"
+    },
+    "information_density": {
+      "rule": "大字體、充足呼吸留白（Generous Breathing Space）",
+      "slide_bullets_limit": "每頁畫面正文最多 2～3 個精簡重點，每點 1～2 句親切大白話，杜絕密集卡片排版",
+      "separation_of_concerns": "投影片畫面僅呈現最核心直覺概念；所有詳細技術背景、延伸規格與展開論述，一律保留於補充講稿（Speaker Notes）"
+    },
+    "illustration_style": {
+      "format": "內嵌手繪向量 SVG (Inline Hand-drawn SVG Doodles)",
+      "stroke_attributes": "stroke: #231F20; stroke-width: 2.2px; stroke-linecap: round; stroke-linejoin: round; fill: none (局部柔和微填充)",
+      "hero_diagram_per_slide": [
+        "Slide 1: 文青手繪音樂天地（黑膠唱片、頭戴耳機、飄舞音符與流暢聲波）",
+        "Slide 2: 連續聲波到數位點陣（手繪起伏波浪 $\\to$ 可愛二進位 0 與 1 音符點陣）",
+        "Slide 3: 時間快照相機（手繪連拍相機與捕蟲網，標註 20 kHz 人耳極限與過渡緩衝）",
+        "Slide 4: 動態階梯刻度尺（粗糙 8-bit 大階梯雜音 vs 細緻 16-bit 96dB 平滑階梯）",
+        "Slide 5: 34.5 MB 巨大音符收納（手繪胖水管巨大音符 $\\to$ 壓縮收納袋變成小音符）",
+        "Slide 6: 聽覺遮蔽保護傘（大雷聲大雨傘下，小樹葉沙沙聲被遮蔽忽略）",
+        "Slide 7: 無損神奇拉鍊袋（FLAC/ALAC 像積木折疊收納，拉開 100% 原樣還原）",
+        "Slide 8: 四大家族手繪地圖（2x2 可愛四宮格：MP3/AAC 有損 vs FLAC/ALAC 無損）",
+        "Slide 9: 生活情境手繪天平（捷運通勤輕巧 AAC vs 寧靜書房細品無損）",
+        "Slide 10: 數位天花板與安全帽（0 dBFS 破音天花板 vs 24-bit 寬敞 Headroom 安全空間）",
+        "Slide 11: 藍牙傳輸漏斗與 DAC 放大鏡（手機無損 $\\to$ 藍牙窄橋壓縮 $\\to$ 耳機，標註 DAC 例外）",
+        "Slide 12: 音樂情感金三角（母帶 + 耳機 + 格式三合一積木，中心發光愛心）"
+      ]
+    },
+    "output_target": "presentation/index.html (Single authoritative output)"
+  }
+}
