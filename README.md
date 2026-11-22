@@ -42,7 +42,7 @@ music-audio-wiki/
 ├── log.md                       # 歷次 Ingest、工作流執行與人工驗收累積日誌
 ├── presentation/
 │   └── index.html               # 最終正式交付之 12 頁手繪 Doodle 互動簡報
-├── raw/                         # 清洗後之權威原始資料（iZotope, MDN, Xiph, Apple）
+├── raw/                         # 清洗後之原始資料（iZotope, MDN, Xiph, Apple）
 │   ├── 01-izotope-digital-audio-basics.md
 │   ├── 02-mdn-digital-audio-concepts.md
 │   ├── 03-mdn-audio-codecs.md
