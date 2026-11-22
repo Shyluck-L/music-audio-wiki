@@ -1,7 +1,7 @@
 # 數位音樂與音質：LLM Wiki 知識庫 ＆ 12 頁教學簡報
 > **Digital Audio & Sound Quality: LLM Wiki & Interactive Presentation**
 
-本專案依據 **Andrej Karpathy 的 LLM Wiki 構想** 構建，實現「底層權威知識庫」與「上層視覺簡報」的**解耦架構**。專案以 5 篇權威文獻為接地基礎，經由 Python 狀態機控制器驅動的 **Graph / Loop 工作流程**，打造出高度嚴謹接地、直覺親切且具備暖白文青黑白手繪 Doodle 風格的 12 頁互動式 HTML5 教學簡報。
+本專案依據 **Andrej Karpathy 的 LLM Wiki 構想** 構建，實現「底層權威知識庫」與「上層視覺簡報」的**解耦架構**。專案以 5 篇文獻為接地基礎，經由 Python 狀態機控制器驅動的 **Graph / Loop 工作流程**，打造出高度嚴謹接地、直覺親切且具備暖白文青黑白手繪 Doodle 風格的 12 頁互動式 HTML5 教學簡報。
 
 ---
 
